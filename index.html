@@ -1486,7 +1486,6 @@
 
     /* recursos em 2 colunas e botões sem órfão */
     #resourceFields{ grid-template-columns:repeat(2, minmax(0,1fr)); }
-    .sheet-actions #btnReset{ grid-column:1/-1; }
 
     /* dicas de perícia por toque (não existe hover no celular) */
     .skill-info{
@@ -1517,8 +1516,6 @@
       text-transform:uppercase; color:var(--text-soft);
     }
     .inv-weapons input, .inv-weapons textarea{ padding-top:5px; }
-    .sheet-tabs{ gap:6px; flex-wrap:nowrap; }
-    .sheet-tab{ padding:10px 0; flex:1 1 0; min-width:0; text-align:center; font-size:11.5px; letter-spacing:.05em; }
     .inv-table textarea{ resize:none; }
     .inv-items td.col-name{ width:42%; }
     .inv-capacity{ font-size:12.5px; }
@@ -1699,6 +1696,490 @@
   }
   @media (prefers-reduced-motion: reduce){ .wz-card, .wz-launch{ transition:none !important; } }
 
+  /* ===================== Sessão e PDF ===================== */
+  /* ---- modo sessão ---- */
+  .sess-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+  .sess-name{ margin:0; font-size:28px; font-weight:600; }
+  .sess-meta{ color:var(--text-dim); font-size:15.5px; margin-top:2px; }
+  .sess-rest{ background:transparent; border:1px solid var(--hairline-strong); color:var(--gold-bright); border-radius:999px; padding:9px 16px; min-height:40px; cursor:pointer; font-family:'Cinzel', Georgia, serif; font-size:12px; letter-spacing:.06em; text-transform:uppercase; }
+  .sess-resgrid{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; margin-bottom:14px; }
+  .sess-res{ border:1px solid var(--hairline); border-radius:14px; padding:12px 14px; background:rgba(255,255,255,.03); }
+  .sess-res-top{ display:flex; align-items:baseline; justify-content:space-between; }
+  .sess-res-label{ font-family:'Cinzel', Georgia, serif; font-size:13px; letter-spacing:.1em; color:var(--text-soft); }
+  .sess-res-val strong{ font-size:34px; font-weight:600; }
+  .sess-res-val small{ color:var(--text-soft); font-size:16px; }
+  .sess-bar{ height:6px; border-radius:99px; background:rgba(255,255,255,.08); margin:6px 0 10px; overflow:hidden; }
+  .sess-bar i{ display:block; height:100%; border-radius:99px; }
+  .res-pv .sess-bar i{ background:#c14958; } .res-pe .sess-bar i{ background:#e2ba7a; } .res-san .sess-bar i{ background:#5f8890; }
+  .sess-res.low .sess-res-val strong{ color:#f2a3ac; }
+  .sess-res-btns{ display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; }
+  .sess-res-btns button{ min-height:44px; border-radius:10px; border:1px solid var(--hairline-strong); background:rgba(255,255,255,.03); color:var(--text); font-size:16px; cursor:pointer; }
+  .sess-res-btns button:active{ background:rgba(185,140,76,.2); }
+  .sess-tracks{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px; margin-bottom:12px; }
+  .sess-tracks .track{ margin:0; }
+  .sess-chip-row{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 12px; }
+  .sess-chip{ border:1px solid var(--hairline-strong); border-radius:999px; padding:6px 14px; color:var(--text-dim); font-size:15px; }
+  .sess-chip strong{ color:var(--gold-bright); margin-left:4px; }
+  .sess-chip.over{ border-color:var(--blood-bright); background:rgba(138,31,43,.3); }
+  .sess-h{ margin:22px 0 10px; padding-bottom:6px; border-bottom:1px solid var(--hairline); font-family:'Cinzel', Georgia, serif; font-size:13px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); }
+  .sess-attrs{ display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); gap:8px; }
+  .sess-attr{ display:flex; flex-direction:column; align-items:center; border:1px solid var(--hairline); border-radius:12px; padding:8px 4px; background:rgba(255,255,255,.025); }
+  .sess-attr span{ font-family:'Cinzel', Georgia, serif; font-size:12px; letter-spacing:.06em; color:var(--text-soft); }
+  .sess-attr strong{ font-size:24px; line-height:1.1; }
+  .sess-attr em{ font-style:normal; font-size:13px; color:var(--gold-bright); }
+  .sess-skills{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; }
+  .sess-skill{ display:flex; align-items:center; justify-content:space-between; gap:8px; border:1px solid var(--hairline); border-radius:10px; padding:8px 12px; background:rgba(255,255,255,.025); }
+  .sess-skill-n{ font-size:15.5px; min-width:0; }
+  .sess-skill-n small{ color:#f2c94c; font-family:'Cinzel', Georgia, serif; font-size:12px; margin-left:2px; }
+  .sess-skill strong{ color:var(--gold-bright); font-size:18px; }
+  .sess-more{ margin-top:10px; }
+  .sess-more summary, .sess-ab summary{ cursor:pointer; }
+  .sess-more > .sess-skills{ margin-top:10px; }
+  .sess-more summary{ color:var(--text-dim); font-size:14.5px; padding:8px 0; }
+  .sess-abs{ display:grid; gap:8px; }
+  .sess-ab{ border:1px solid var(--hairline); border-radius:12px; background:rgba(255,255,255,.025); }
+  .sess-ab summary{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding:12px 14px; min-height:46px; list-style:none; }
+  .sess-ab summary::-webkit-details-marker{ display:none; }
+  .sess-ab-n{ font-weight:600; font-size:16.5px; }
+  .sess-ab-c{ font-family:'Cinzel', Georgia, serif; font-size:12px; letter-spacing:.04em; padding:3px 10px; border-radius:999px; background:rgba(185,140,76,.14); color:var(--gold-bright); white-space:nowrap; }
+  .sess-ab p{ margin:0; padding:0 14px 14px; color:var(--text-dim); font-size:15.5px; }
+  .sess-ab.origin{ border-color:var(--hairline-strong); }
+  .sess-ab p.pre{ white-space:pre-wrap; }
+  .sess-inv{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:16px; }
+  .sess-inv h5{ margin:0 0 8px; font-family:'Cinzel', Georgia, serif; font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-soft); }
+  .sess-list{ list-style:none; margin:0; padding:0; display:grid; gap:8px; }
+  .sess-list li{ border:1px solid var(--hairline); border-radius:10px; padding:8px 12px; background:rgba(255,255,255,.025); display:flex; flex-direction:column; gap:2px; }
+  .sess-list span{ color:var(--gold-bright); font-size:14px; }
+  .sess-list em{ color:var(--text-dim); font-size:14.5px; font-style:normal; }
+  .sess-empty{ color:var(--text-soft); font-style:italic; margin:4px 0; font-size:15px; }
+
+  @media (max-width:820px){
+    .sess-skills{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+  }
+  @media (max-width:640px){
+    .sheet-tabs{ display:grid !important; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px !important; }
+    .sheet-tab{ padding:11px 0 !important; font-size:12px !important; }
+    .sess-resgrid, .sess-tracks, .sess-inv{ grid-template-columns:1fr; }
+    .sess-attrs{ grid-template-columns:repeat(3, minmax(0,1fr)); }
+    .sess-skills{ grid-template-columns:1fr; }
+    .sess-name{ font-size:24px; }
+  }
+
+  /* ---- impressão / PDF ---- */
+  #printSheet{ display:none; }
+  @media print{
+    @page{ size:A4; margin:10mm; }
+    html, body{ background:#fff !important; color-scheme:light !important; }
+    body > *:not(#printSheet){ display:none !important; }
+    #printSheet{ display:block !important; color:#1c1416; font-family:'EB Garamond', Georgia, 'Times New Roman', serif; font-size:10.5pt; line-height:1.3; }
+    #printSheet, #printSheet *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; box-sizing:border-box; }
+    .ps-page{ break-after:page; page-break-after:always; }
+    .ps-page:last-child{ break-after:auto; page-break-after:auto; }
+    .ps-head{ display:flex; align-items:baseline; justify-content:space-between; border-bottom:2.5px solid #1c1416; padding-bottom:4px; margin-bottom:8px; }
+    .ps-brand{ font-family:'Cinzel', Georgia, serif; font-size:24pt; letter-spacing:.18em; font-weight:700; }
+    .ps-sub{ font-family:'Cinzel', Georgia, serif; font-size:10pt; letter-spacing:.2em; text-transform:uppercase; color:#7a1c27; }
+    .ps-name{ border:1.2px solid #1c1416; border-radius:6px; padding:5px 10px 6px; margin-bottom:6px; }
+    .ps-name span, .ps-meta span, .ps-attr span, .ps-res span, .ps-tracks span, .ps-money span{ display:block; font-family:'Cinzel', Georgia, serif; font-size:7pt; letter-spacing:.12em; text-transform:uppercase; color:#7a1c27; }
+    .ps-name strong{ display:block; font-size:17pt; min-height:22pt; font-weight:600; }
+    .ps-meta{ display:grid; grid-template-columns:repeat(4, 1fr); gap:6px; margin-bottom:4px; }
+    .ps-meta div{ border:1px solid #b9a67e; border-radius:6px; padding:4px 8px 5px; background:#f7f1e4; }
+    .ps-meta strong{ font-size:11pt; font-weight:600; }
+    .ps-h{ margin:12px 0 6px; padding-bottom:2px; border-bottom:1.2px solid #8a6428; font-family:'Cinzel', Georgia, serif; font-size:10.5pt; letter-spacing:.2em; text-transform:uppercase; color:#8a6428; font-weight:700; }
+    .ps-h.first{ margin-top:0; }
+    .ps-attrs{ display:grid; grid-template-columns:repeat(6, 1fr); gap:6px; }
+    .ps-attr{ text-align:center; border:1.2px solid #1c1416; border-radius:8px; padding:5px 2px 6px; background:#f7f1e4; }
+    .ps-attr strong{ display:block; font-size:21pt; line-height:1.05; }
+    .ps-attr em{ font-style:normal; font-size:9pt; color:#8a6428; font-weight:700; }
+    .ps-ress{ display:grid; grid-template-columns:repeat(3, 1fr) 1fr; gap:8px; }
+    .ps-res{ border:1.2px solid #1c1416; border-radius:8px; padding:5px 10px 6px; position:relative; background:#fff; }
+    .ps-res strong{ display:block; font-size:20pt; line-height:1.1; }
+    .ps-res.small{ background:#f7f1e4; }
+    .ps-cur{ display:flex; align-items:flex-end; gap:6px; margin-top:2px; }
+    .ps-cur small{ font-size:7pt; color:#6d6150; }
+    .ps-cur b{ flex:1; height:15pt; border-bottom:1px solid #1c1416; }
+    .ps-tracks{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
+    .ps-tracks small{ font-size:8pt; letter-spacing:0; color:#6d6150; text-transform:none; }
+    .ps-dots{ display:flex; flex-wrap:wrap; gap:4px; margin-top:3px; }
+    .ps-dot{ width:13px; height:13px; border-radius:50%; border:1.4px solid #1c1416; display:inline-block; }
+    .ps-dot.on{ background:#8a6428; }
+    .ps-dots.red .ps-dot.on{ background:#7a1c27; border-color:#7a1c27; }
+    .ps-skills{ display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:0 14px; }
+    .ps-skills ul{ min-width:0; }
+    .ps-skills ul{ list-style:none; margin:0; padding:0; }
+    .ps-skills li{ display:flex; align-items:center; justify-content:space-between; gap:6px; padding:2.4px 0; border-bottom:.7px solid #d6c9aa; font-size:10pt; }
+    .ps-skills li small{ font-family:'Cinzel', Georgia, serif; font-size:6.8pt; color:#8a6428; letter-spacing:.04em; font-weight:700; }
+    .ps-skills li b{ min-width:26px; height:17px; text-align:center; border:1px solid #b9a67e; border-radius:4px; font-size:10pt; line-height:15px; }
+    .ps-skills li.on{ font-weight:700; }
+    .ps-skills li.on b{ background:#8a6428; border-color:#8a6428; color:#fff; }
+    .ps-ab{ border:1px solid #b9a67e; border-left:4px solid #8a6428; border-radius:4px; padding:5px 10px 6px; margin-bottom:6px; background:#fbf8f1; break-inside:avoid; }
+    .ps-ab.origin{ border-left-color:#7a1c27; }
+    .ps-ab h4{ margin:0 0 1px; font-size:11.5pt; }
+    .ps-ab h4 small{ font-family:'Cinzel', Georgia, serif; font-size:7.5pt; color:#7a1c27; letter-spacing:.06em; margin-left:6px; text-transform:uppercase; }
+    .ps-ab p{ margin:0; font-size:10pt; }
+    .ps-empty{ color:#6d6150; font-style:italic; }
+    .ps-money{ display:flex; gap:10px; margin-bottom:6px; }
+    .ps-money div{ border:1.2px solid #1c1416; border-radius:8px; padding:4px 12px 5px; min-width:120px; }
+    .ps-money strong{ font-size:14pt; }
+    .ps-table{ width:100%; border-collapse:collapse; margin-bottom:10px; table-layout:fixed; }
+    .ps-table th{ background:#1c1416; color:#f7f1e4; font-family:'Cinzel', Georgia, serif; font-size:7.5pt; letter-spacing:.1em; text-transform:uppercase; padding:4px 6px; text-align:left; }
+    .ps-table td{ border:1px solid #b9a67e; padding:3px 6px; height:21pt; vertical-align:top; font-size:10pt; overflow-wrap:anywhere; }
+    .ps-table.w th:nth-child(1){ width:24%; } .ps-table.w th:nth-child(2){ width:12%; } .ps-table.w th:nth-child(3){ width:13%; } .ps-table.w th:nth-child(4){ width:13%; }
+    .ps-table.i th:nth-child(1){ width:34%; }
+    .ps-box{ border:1.2px solid #1c1416; border-radius:8px; padding:6px 10px 8px; margin-bottom:10px; }
+    .ps-box h4{ margin:0 0 4px; font-family:'Cinzel', Georgia, serif; font-size:9pt; letter-spacing:.16em; text-transform:uppercase; color:#7a1c27; }
+    .ps-text{ white-space:pre-wrap; min-height:40pt; font-size:11pt; line-height:1.45; overflow-wrap:anywhere; }
+    .ps-box.big .ps-text{ min-height:380pt; }
+    .ps-three{ display:grid; grid-template-columns:1fr; gap:0; }
+    .ps-three .ps-text{ min-height:70pt; }
+  }
+
+  /* Conferência das regras */
+  .val-panel{ margin:0 0 16px; border:1px solid var(--hairline); border-radius:var(--radius-md); background:rgba(255,255,255,0.03); overflow:hidden; }
+  .val-panel.ok{ border-color:rgba(159,208,170,0.35); }
+  .val-panel.warn{ border-color:rgba(226,186,122,0.55); }
+  .val-panel.error{ border-color:rgba(193,73,88,0.7); }
+  .val-head{ width:100%; display:flex; align-items:center; gap:12px; padding:12px 14px; background:none; border:0; color:var(--text); text-align:left; cursor:pointer; font:inherit; }
+  .val-head:disabled{ cursor:default; }
+  .val-ico{ flex:0 0 28px; height:28px; border-radius:50%; display:grid; place-items:center; font-weight:700; font-size:14px; background:rgba(159,208,170,0.16); color:#9fd0aa; }
+  .val-panel.warn .val-ico{ background:rgba(226,186,122,0.16); color:var(--gold-bright); }
+  .val-panel.error .val-ico{ background:rgba(193,73,88,0.2); color:var(--blood-bright); }
+  .val-sum{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+  .val-sum b{ font-family:'Cinzel', Georgia, serif; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--text-soft); font-weight:600; }
+  .val-sum span{ font-size:14px; color:var(--text); }
+  .val-chev{ color:var(--text-dim); }
+  .val-list{ list-style:none; margin:0; padding:0 14px 12px; display:flex; flex-direction:column; gap:8px; }
+  .val-item{ display:flex; gap:10px; align-items:flex-start; justify-content:space-between; padding:10px 12px; border-radius:var(--radius-sm); border-left:3px solid var(--gold); background:rgba(0,0,0,0.22); }
+  .val-item.error{ border-left-color:var(--blood-bright); }
+  .val-item.info{ border-left-color:var(--text-soft); }
+  .val-item b{ font-size:14px; color:var(--text); }
+  .val-item p{ margin:3px 0 0; font-size:13px; line-height:1.45; color:var(--text-dim); overflow-wrap:anywhere; }
+  .val-acts{ display:flex; gap:6px; flex-shrink:0; flex-wrap:wrap; justify-content:flex-end; }
+  .val-acts button{ background:none; border:1px solid var(--hairline-strong); color:var(--gold-bright); border-radius:999px; padding:6px 12px; font:inherit; font-size:12px; cursor:pointer; min-height:32px; }
+  .val-acts button:hover{ background:rgba(226,186,122,0.12); }
+  .val-flash{ animation:valflash 1.5s ease; }
+  @keyframes valflash{ 0%,60%{ box-shadow:0 0 0 3px rgba(226,186,122,0.7); } 100%{ box-shadow:0 0 0 3px rgba(226,186,122,0); } }
+  @media (max-width:640px){
+    .val-item{ flex-direction:column; }
+    .val-acts{ justify-content:flex-start; }
+    .val-acts button{ min-height:40px; }
+  }
+@media print{ .val-panel{ display:none !important; } }
+
+
+  /* ============ SITE TODO: mesma linguagem da ficha ============ */
+  body::before{ content:''; position:fixed; inset:0; z-index:-1; pointer-events:none; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .9  0 0 0 0 .8  0 0 0 0 .6  0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); opacity:.06; mix-blend-mode:soft-light; }
+
+  /* divisor do cabeçalho */
+  .occult-rule{ opacity:.85; }
+  .occult-rule i{ width:12px; height:12px; border:0; transform:none; opacity:1; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0L10 5L5 10L0 5Z' fill='%23e2ba7a' fill-opacity='.9'/%3E%3C/svg%3E") center/contain no-repeat; }
+
+  /* abas: formato de placa */
+  .main-tab, nav.class-tabs button, .sheet-actions button, .sheet-actions .file-btn, .wz-btn, .wz-launch, .origin-search{ border-radius:3px; }
+  .main-tab{ letter-spacing:.18em; }
+  .main-tab.active, nav.class-tabs button.active{ box-shadow:0 0 0 3px rgba(226,186,122,.18), 0 10px 26px rgba(0,0,0,.35); }
+  nav.class-tabs button{ letter-spacing:.16em; }
+
+  /* molduras: painéis, cartões e caixas */
+  .panel-card{ border-radius:6px; box-shadow:var(--shadow), inset 0 0 0 7px #120d10, inset 0 0 0 8px rgba(226,186,122,.3), inset 0 0 90px rgba(0,0,0,.4); padding:48px clamp(24px,5vw,60px) 44px; }
+  .panel-card::before{
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Cg transform='translate(0 0) scale(1 1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23e2ba7a' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") left 12px top 12px/48px 48px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Cg transform='translate(56 0) scale(-1 1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23e2ba7a' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") right 12px top 12px/48px 48px no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Cg transform='translate(0 56) scale(1 -1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23e2ba7a' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") left 12px bottom 12px/48px 48px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Cg transform='translate(56 56) scale(-1 -1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23e2ba7a' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") right 12px bottom 12px/48px 48px no-repeat,
+      radial-gradient(circle at 92% 8%, rgba(226,186,122,.055), transparent 18%), linear-gradient(180deg, rgba(255,255,255,.035), transparent 22%);
+  }
+  .class-heading h2{ letter-spacing:.14em; text-transform:uppercase; }
+  .class-heading + .class-desc{ border-left:2px solid rgba(226,186,122,.35); padding-left:14px; }
+
+  /* títulos de seção em faixa ornamentada (em todo o site) */
+  h3.sub-heading{
+    display:flex; align-items:center; gap:14px; justify-content:center; text-align:center;
+    letter-spacing:.22em; text-transform:uppercase; text-shadow:0 2px 12px rgba(0,0,0,.6);
+  }
+  h3.sub-heading::before, h3.sub-heading::after{ content:''; flex:1; height:11px; min-width:20px; }
+  h3.sub-heading::before{ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0L10 5L5 10L0 5Z' fill='%23e2ba7a' fill-opacity='.9'/%3E%3C/svg%3E") right center/9px 9px no-repeat, linear-gradient(90deg, transparent, rgba(226,186,122,.65)) center/calc(100% - 14px) 1px no-repeat; }
+  h3.sub-heading::after{ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0L10 5L5 10L0 5Z' fill='%23e2ba7a' fill-opacity='.9'/%3E%3C/svg%3E") left center/9px 9px no-repeat, linear-gradient(270deg, transparent, rgba(226,186,122,.65)) center/calc(100% - 14px) 1px no-repeat; }
+  .origins-head h2, .guide-head h2{ letter-spacing:.2em; text-transform:uppercase; color:var(--gold-bright); }
+  .origins-head h2::after, .guide-head h2::after, .sheet-head h2::after{
+    content:''; display:block; height:12px; margin:14px auto 4px; width:min(360px,70%);
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0L10 5L5 10L0 5Z' fill='%23e2ba7a' fill-opacity='.9'/%3E%3C/svg%3E") center/10px 10px no-repeat, linear-gradient(90deg, transparent, rgba(226,186,122,.7)) left center/calc(50% - 14px) 1px no-repeat, linear-gradient(270deg, transparent, rgba(226,186,122,.7)) right center/calc(50% - 14px) 1px no-repeat;
+  }
+
+  /* atributos base da classe: placas */
+  .ledger{ gap:22px 16px; padding-top:10px; }
+  .ledger .stat{ position:relative; border-radius:3px; padding:24px 10px 12px; border:1px solid rgba(226,186,122,.45); background:rgba(0,0,0,.28); outline:1px solid rgba(226,186,122,.18); outline-offset:4px; display:flex; flex-direction:column; align-items:center; }
+  .ledger .stat .lbl{ position:absolute; top:-11px; left:50%; transform:translateX(-50%); margin:0; padding:2px 14px; background:#0b080a; border:1px solid rgba(226,186,122,.5); color:var(--parchment); font-weight:700; letter-spacing:.2em; white-space:nowrap; font-size:11px; font-family:'Cinzel', Georgia, serif; }
+  .ledger .stat .num{ font-size:28px; }
+
+  /* subclasses */
+  .subclass{ border-radius:4px; border-left:3px solid rgba(226,186,122,.5); box-shadow:inset 0 0 0 3px #14100f, inset 0 0 0 4px rgba(226,186,122,.12); }
+  .subclass.open{ border-left-color:var(--gold-bright); }
+  .subclass-head .name{ letter-spacing:.04em; }
+
+  /* origens */
+  .origin-search{ border:2px solid rgba(226,186,122,.5); background:rgba(0,0,0,.28); text-align:center; padding:12px 24px; box-shadow:inset 0 0 0 3px #120d10, inset 0 0 0 4px rgba(226,186,122,.14); border-radius:999px; }
+  .origin-card{ border-radius:5px; box-shadow:inset 0 0 0 4px #14100f, inset 0 0 0 5px rgba(226,186,122,.16); }
+  .origin-card::after{ content:''; position:absolute; inset:7px; pointer-events:none; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Cg transform='translate(0 0) scale(1 1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23e2ba7a' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") top left/20px 20px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Cg transform='translate(56 56) scale(-1 -1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23e2ba7a' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") bottom right/20px 20px no-repeat; opacity:.8; }
+  .origin-card > *{ position:relative; z-index:1; }
+  .origin-card h3{ letter-spacing:.08em; }
+  .origin-vant span{ border-radius:3px; }
+
+  /* guia */
+  .flow-step{ position:relative; border-radius:4px; padding-top:26px; box-shadow:inset 0 0 0 3px #14100f, inset 0 0 0 4px rgba(226,186,122,.14); }
+  .flow-step b{ position:absolute; top:-10px; left:-6px; display:block; margin:0; padding:5px 22px 5px 14px; background:#6b4f27; color:var(--parchment); letter-spacing:.2em; clip-path:polygon(0 0,100% 0,calc(100% - 11px) 50%,100% 100%,0 100%); }
+  .flow-step:nth-child(5) b{ background:var(--blood); }
+  .guide-card{ border-radius:5px; box-shadow:inset 0 0 0 4px #14100f, inset 0 0 0 5px rgba(226,186,122,.16); }
+  .guide-card::after{ content:''; position:absolute; inset:7px; pointer-events:none; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Cg transform='translate(0 0) scale(1 1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23e2ba7a' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") top left/20px 20px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Cg transform='translate(56 56) scale(-1 -1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23e2ba7a' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") bottom right/20px 20px no-repeat; opacity:.8; }
+  .guide-card > *{ position:relative; z-index:1; }
+  .guide-card h3{ letter-spacing:.16em; text-transform:uppercase; }
+  .guide-note{ border-radius:3px; }
+
+  /* assistente de criação e painéis de salvamento */
+  .wz-panel{ border-radius:6px; box-shadow:0 40px 100px rgba(0,0,0,.6), inset 0 0 0 7px #120d10, inset 0 0 0 8px rgba(226,186,122,.3); }
+  .wz-panel::after{ display:none; }
+  .wz-panel{ position:relative; }
+  .wz-head{ padding-top:28px; }
+  .wz-step-title{ letter-spacing:.14em; text-transform:uppercase; }
+  .wz-pbar{ border-radius:0; height:5px; }
+  .wz-pstep.active .wz-pbar, .wz-pstep.done .wz-pbar{ box-shadow:0 0 8px rgba(226,186,122,.35); }
+  .wz-card{ border-radius:5px; box-shadow:inset 0 0 0 4px #14100f, inset 0 0 0 5px rgba(226,186,122,.16); }
+  .wz-attr, .wz-note{ border-radius:3px; }
+  .save-panel, .code-box{ border-radius:5px; box-shadow:inset 0 0 0 4px #14100f, inset 0 0 0 5px rgba(226,186,122,.14); }
+
+  @media (max-width:640px){
+    .panel-card{ padding:40px 18px 32px; box-shadow:var(--shadow), inset 0 0 0 5px #120d10, inset 0 0 0 6px rgba(226,186,122,.28); }
+    .panel-card::before{ background-size:36px 36px, 36px 36px, 36px 36px, 36px 36px, auto, auto; }
+    .wz-panel::after{ display:none; }
+    h3.sub-heading{ letter-spacing:.14em; gap:10px; }
+    .origins-head h2, .guide-head h2{ letter-spacing:.12em; }
+    .flow-step b{ left:-4px; }
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .origin-card, .guide-card, .wz-card{ transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+  }
+
+  /* ============ FICHA ESTILIZADA (moldura, hexágono, placas) ============ */
+  #view-ficha .sheet-card{
+    border:1px solid rgba(226,186,122,.38); border-top:4px solid var(--gold); border-radius:6px;
+    padding:44px clamp(22px,5vw,60px) 40px;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .9  0 0 0 0 .8  0 0 0 0 .6  0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+      radial-gradient(ellipse at 50% 0%, rgba(226,186,122,.07), transparent 55%),
+      linear-gradient(180deg, rgba(31,24,28,.98), rgba(18,13,16,.99));
+    background-blend-mode:soft-light, normal, normal;
+    box-shadow:var(--shadow), inset 0 0 0 7px #120d10, inset 0 0 0 8px rgba(226,186,122,.32), inset 0 0 90px rgba(0,0,0,.45);
+  }
+  #view-ficha .sheet-card::after{
+    content:''; position:absolute; inset:12px; pointer-events:none; z-index:0;
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Cg transform='translate(0 0) scale(1 1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23e2ba7a' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") top left/52px 52px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Cg transform='translate(56 0) scale(-1 1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23e2ba7a' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") top right/52px 52px no-repeat,
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Cg transform='translate(0 56) scale(1 -1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23e2ba7a' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") bottom left/52px 52px no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Cg transform='translate(56 56) scale(-1 -1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23e2ba7a' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") bottom right/52px 52px no-repeat;
+  }
+  #view-ficha .sheet-card > *{ position:relative; z-index:1; }
+
+  /* títulos de seção: faixa ornamentada */
+  #view-ficha h3.sub-heading{
+    display:flex; align-items:center; gap:14px; justify-content:center; text-align:center;
+    font-family:'Cinzel', Georgia, serif; font-size:clamp(17px,2.4vw,22px); letter-spacing:.22em; text-transform:uppercase;
+    color:var(--gold-bright); margin:0 0 20px; text-shadow:0 2px 12px rgba(0,0,0,.6);
+  }
+  #view-ficha h3.sub-heading::before,
+  #view-ficha h3.sub-heading::after{ content:''; flex:1; height:11px; min-width:20px; }
+  #view-ficha h3.sub-heading::before{ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0L10 5L5 10L0 5Z' fill='%23e2ba7a' fill-opacity='.9'/%3E%3C/svg%3E") right center/9px 9px no-repeat, linear-gradient(90deg, transparent, rgba(226,186,122,.65)) center/calc(100% - 14px) 1px no-repeat; }
+  #view-ficha h3.sub-heading::after{ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0L10 5L5 10L0 5Z' fill='%23e2ba7a' fill-opacity='.9'/%3E%3C/svg%3E") left center/9px 9px no-repeat, linear-gradient(270deg, transparent, rgba(226,186,122,.65)) center/calc(100% - 14px) 1px no-repeat; }
+  #view-ficha .sheet-section > p.hint{ text-align:center; margin:-8px auto 18px; max-width:62ch; }
+  #view-ficha .sheet-section{ margin-bottom:44px; }
+
+  #ficha .sheet-head h2{ letter-spacing:.14em; }
+  #view-ficha .sheet-tabs{ justify-content:center; padding-bottom:16px; margin-bottom:34px; border-bottom:1px solid var(--hairline); position:relative; }
+  #view-ficha .sheet-tabs::after{ content:'◆'; position:absolute; left:50%; bottom:-8px; transform:translateX(-50%); color:var(--gold); font-size:11px; background:#161115; padding:0 10px; }
+  #view-ficha .sheet-tab{ border-radius:3px; letter-spacing:.16em; }
+  #view-ficha .sheet-tab.active{ box-shadow:0 0 0 3px rgba(226,186,122,.18); }
+
+  /* identificação: cápsulas com rótulo entre colchetes */
+  #idFields{ grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:20px 18px; }
+  #idFields .field label::before{ content:'[ '; color:var(--gold); }
+  #idFields .field label::after{ content:' ]'; color:var(--gold); }
+  #idFields .field label{ order:2; margin:8px 0 0; text-align:center; color:var(--parchment-soft); letter-spacing:.14em; }
+  #idFields .field input, #idFields .field select{
+    order:1; border-radius:999px; border:2px solid rgba(226,186,122,.5); background:rgba(0,0,0,.28);
+    padding:0 22px; height:50px; text-align:center; text-align-last:center; box-shadow:inset 0 0 0 3px #120d10, inset 0 0 0 4px rgba(226,186,122,.14);
+  }
+  #idFields .field:first-child input{ font-family:'Cinzel', Georgia, serif; font-size:19px; color:var(--gold-bright); }
+
+  /* atributos: hexágono */
+  #view-ficha .attr-box{ border-radius:26px; border:2px solid rgba(226,186,122,.6); background:radial-gradient(circle at 50% 30%, #2b2229, #120d10 78%); outline:2px dotted rgba(226,186,122,.45); outline-offset:6px; box-shadow:0 8px 24px rgba(0,0,0,.5); }
+  #view-ficha .attr-box::before{ display:none; }
+  #view-ficha .attr-box label{ font-size:13px; letter-spacing:.2em; color:var(--parchment); margin:0 0 2px; font-weight:700; }
+  #view-ficha .attr-box select{ appearance:none; -webkit-appearance:none; background:transparent; border:0; box-shadow:none; font-size:30px; padding:0 4px; width:auto; min-width:2ch; cursor:pointer; text-align:center; text-align-last:center; line-height:1.1; }
+  #view-ficha .attr-box select:focus{ outline:2px solid var(--gold); border-radius:8px; }
+  #view-ficha .attr-box .attr-mod{ margin:0; font-size:11px; letter-spacing:.08em; text-transform:uppercase; }
+  #view-ficha .attr-raise{ width:auto; margin:6px auto 0; padding:3px 12px; font-size:10px; letter-spacing:.12em; background:#1b1418; }
+  #view-ficha .attr-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); gap:26px 16px; padding:8px 6px 6px; }
+  #view-ficha .attr-box{ display:flex; flex-direction:column; align-items:center; justify-content:center; padding:6px; max-width:150px; width:100%; margin:0 auto; }
+  @media (min-width:760px){
+    #view-ficha .attr-grid{
+      display:block; position:relative; max-width:580px; margin:26px auto 14px; padding:0; aspect-ratio:100/93;
+      background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 70' fill='none' stroke='%23e2ba7a' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 35 Q60 -8 114 35 Q60 78 6 35Z' stroke-width='2.2' stroke-opacity='.9'/%3E%3Cpath d='M16 35 Q60 3 104 35 Q60 67 16 35Z' stroke-width='1' stroke-opacity='.45'/%3E%3Ccircle cx='60' cy='35' r='15' stroke-width='2' stroke-opacity='.9'/%3E%3Ccircle cx='60' cy='35' r='9' stroke-width='1' stroke-opacity='.6'/%3E%3Cpath d='M60 26 L67 35 L60 44 L53 35Z' fill='%23e2ba7a' fill-opacity='.85' stroke='none'/%3E%3Cg stroke-width='1.2' stroke-opacity='.6'%3E%3Cpath d='M60 2V10M40 6L43 13M80 6L77 13M60 68V60M40 64L43 57M80 64L77 57'/%3E%3C/g%3E%3C/svg%3E") center/25% auto no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-100 -100 200 200' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Ccircle r='96' stroke-opacity='.35' stroke-width='.8'/%3E%3Ccircle r='70' stroke-opacity='.28' stroke-width='.8'/%3E%3Ccircle r='64' stroke-opacity='.18' stroke-width='.6' stroke-dasharray='1 4'/%3E%3Cline x1='96.00' y1='0.00' x2='90.00' y2='0.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='95.63' y1='8.37' x2='92.65' y2='8.11' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='94.54' y1='16.67' x2='91.59' y2='16.15' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='92.73' y1='24.85' x2='89.83' y2='24.07' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='90.21' y1='32.83' x2='87.39' y2='31.81' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='87.01' y1='40.57' x2='84.29' y2='39.30' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='83.14' y1='48.00' x2='77.94' y2='45.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='78.64' y1='55.06' x2='76.18' y2='53.34' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='73.54' y1='61.71' x2='71.24' y2='59.78' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='67.88' y1='67.88' x2='65.76' y2='65.76' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='61.71' y1='73.54' x2='59.78' y2='71.24' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='55.06' y1='78.64' x2='53.34' y2='76.18' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='48.00' y1='83.14' x2='45.00' y2='77.94' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='40.57' y1='87.01' x2='39.30' y2='84.29' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='32.83' y1='90.21' x2='31.81' y2='87.39' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='24.85' y1='92.73' x2='24.07' y2='89.83' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='16.67' y1='94.54' x2='16.15' y2='91.59' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='8.37' y1='95.63' x2='8.11' y2='92.65' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='0.00' y1='96.00' x2='0.00' y2='90.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-8.37' y1='95.63' x2='-8.11' y2='92.65' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-16.67' y1='94.54' x2='-16.15' y2='91.59' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-24.85' y1='92.73' x2='-24.07' y2='89.83' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-32.83' y1='90.21' x2='-31.81' y2='87.39' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-40.57' y1='87.01' x2='-39.30' y2='84.29' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-48.00' y1='83.14' x2='-45.00' y2='77.94' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-55.06' y1='78.64' x2='-53.34' y2='76.18' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-61.71' y1='73.54' x2='-59.78' y2='71.24' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-67.88' y1='67.88' x2='-65.76' y2='65.76' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-73.54' y1='61.71' x2='-71.24' y2='59.78' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-78.64' y1='55.06' x2='-76.18' y2='53.34' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-83.14' y1='48.00' x2='-77.94' y2='45.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-87.01' y1='40.57' x2='-84.29' y2='39.30' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-90.21' y1='32.83' x2='-87.39' y2='31.81' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-92.73' y1='24.85' x2='-89.83' y2='24.07' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-94.54' y1='16.67' x2='-91.59' y2='16.15' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-95.63' y1='8.37' x2='-92.65' y2='8.11' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-96.00' y1='0.00' x2='-90.00' y2='0.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-95.63' y1='-8.37' x2='-92.65' y2='-8.11' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-94.54' y1='-16.67' x2='-91.59' y2='-16.15' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-92.73' y1='-24.85' x2='-89.83' y2='-24.07' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-90.21' y1='-32.83' x2='-87.39' y2='-31.81' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-87.01' y1='-40.57' x2='-84.29' y2='-39.30' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-83.14' y1='-48.00' x2='-77.94' y2='-45.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-78.64' y1='-55.06' x2='-76.18' y2='-53.34' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-73.54' y1='-61.71' x2='-71.24' y2='-59.78' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-67.88' y1='-67.88' x2='-65.76' y2='-65.76' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-61.71' y1='-73.54' x2='-59.78' y2='-71.24' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-55.06' y1='-78.64' x2='-53.34' y2='-76.18' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-48.00' y1='-83.14' x2='-45.00' y2='-77.94' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-40.57' y1='-87.01' x2='-39.30' y2='-84.29' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-32.83' y1='-90.21' x2='-31.81' y2='-87.39' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-24.85' y1='-92.73' x2='-24.07' y2='-89.83' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-16.67' y1='-94.54' x2='-16.15' y2='-91.59' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-8.37' y1='-95.63' x2='-8.11' y2='-92.65' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-0.00' y1='-96.00' x2='-0.00' y2='-90.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='8.37' y1='-95.63' x2='8.11' y2='-92.65' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='16.67' y1='-94.54' x2='16.15' y2='-91.59' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='24.85' y1='-92.73' x2='24.07' y2='-89.83' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='32.83' y1='-90.21' x2='31.81' y2='-87.39' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='40.57' y1='-87.01' x2='39.30' y2='-84.29' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='48.00' y1='-83.14' x2='45.00' y2='-77.94' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='55.06' y1='-78.64' x2='53.34' y2='-76.18' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='61.71' y1='-73.54' x2='59.78' y2='-71.24' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='67.88' y1='-67.88' x2='65.76' y2='-65.76' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='73.54' y1='-61.71' x2='71.24' y2='-59.78' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='78.64' y1='-55.06' x2='76.18' y2='-53.34' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='83.14' y1='-48.00' x2='77.94' y2='-45.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='87.01' y1='-40.57' x2='84.29' y2='-39.30' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='90.21' y1='-32.83' x2='87.39' y2='-31.81' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='92.73' y1='-24.85' x2='89.83' y2='-24.07' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='94.54' y1='-16.67' x2='91.59' y2='-16.15' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='95.63' y1='-8.37' x2='92.65' y2='-8.11' stroke-opacity='.4' stroke-width='.8'/%3E%3Cpath d='M3.1 -1.1 L-3.2 3.2 L-2.8 0.8 L2.9 -2.9 M0 -5 L0 5' transform='translate(79.9 4.0) rotate(92.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.5 -4.3 L-2.9 -0.8 L2.3 -3.8 M0 -5 L0 5' transform='translate(77.3 20.5) rotate(104.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M0.9 0.8 L-3.1 0.9 L-3.2 -2.8 M0 -5 L0 5' transform='translate(71.4 36.2) rotate(116.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-1.5 -3.6 L-2.7 -1.9 L2.2 -3.2 M0 -5 L0 5' transform='translate(62.3 50.2) rotate(128.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.9 0.5 L-3.1 -4.4 L-2.1 1.8 M0 -5 L0 5' transform='translate(50.5 62.1) rotate(140.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M1.9 -0.3 L3.0 -1.4 L-1.8 -3.2 L2.0 -4.2 M0 -5 L0 5' transform='translate(36.5 71.2) rotate(152.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M0.2 3.8 L1.6 -2.1 L3.4 -3.8 L-0.6 2.6 M0 -5 L0 5' transform='translate(20.9 77.2) rotate(164.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M3.0 -0.8 L3.2 -4.2 L0.4 2.9 M0 -5 L0 5' transform='translate(4.4 79.9) rotate(176.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-1.1 -1.5 L-0.0 3.0 L-3.0 -4.1 L-1.6 2.0 M0 -5 L0 5' transform='translate(-12.3 79.0) rotate(188.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-3.1 2.0 L1.0 4.9 L2.3 -2.2 M0 -5 L0 5' transform='translate(-28.5 74.8) rotate(200.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M2.7 -1.5 L3.1 -1.4 L0.8 -0.1 L-2.0 -2.1 M0 -5 L0 5' transform='translate(-43.4 67.2) rotate(212.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.7 4.2 L-0.0 -3.3 L-0.7 -2.2 M0 -5 L0 5' transform='translate(-56.4 56.7) rotate(224.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M2.2 3.6 L-1.6 -0.8 L-1.0 3.8 M0 -5 L0 5' transform='translate(-67.0 43.7) rotate(236.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-2.4 -3.2 L-1.9 -2.7 L-0.1 0.9 M0 -5 L0 5' transform='translate(-74.6 28.8) rotate(248.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-1.5 -3.5 L0.2 1.1 L-1.3 -3.7 L2.5 4.5 M0 -5 L0 5' transform='translate(-79.0 12.7) rotate(260.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.3 3.7 L3.2 1.8 L0.4 -1.0 M0 -5 L0 5' transform='translate(-79.9 -4.0) rotate(272.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-2.8 1.3 L-3.1 -4.3 L-2.0 -3.4 L-1.1 -4.5 M0 -5 L0 5' transform='translate(-77.3 -20.5) rotate(284.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M0.5 0.4 L3.1 1.1 L-3.0 -2.9 M0 -5 L0 5' transform='translate(-71.4 -36.2) rotate(296.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-2.5 -2.5 L-1.1 -1.4 L-2.6 3.5 L3.5 -0.3 M0 -5 L0 5' transform='translate(-62.3 -50.2) rotate(308.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-1.3 -3.6 L1.7 2.4 L-0.1 1.9 L0.1 -2.9 M0 -5 L0 5' transform='translate(-50.5 -62.1) rotate(320.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-2.5 0.4 L-3.3 0.3 L3.3 3.6 L1.4 -2.4 M0 -5 L0 5' transform='translate(-36.5 -71.2) rotate(332.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M2.9 -1.4 L-1.9 0.4 L0.0 1.4 L0.8 2.9 M0 -5 L0 5' transform='translate(-20.9 -77.2) rotate(344.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M2.1 3.2 L1.7 -2.7 L0.1 -1.4 M0 -5 L0 5' transform='translate(-4.4 -79.9) rotate(356.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M3.4 2.9 L-0.2 -3.1 L0.7 -1.6 M0 -5 L0 5' transform='translate(12.3 -79.0) rotate(368.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M3.2 -1.4 L-2.0 -2.7 L-2.1 -3.0 L0.9 4.0 M0 -5 L0 5' transform='translate(28.5 -74.8) rotate(380.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.1 1.5 L2.1 -4.2 L1.1 4.1 M0 -5 L0 5' transform='translate(43.4 -67.2) rotate(392.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.2 -3.2 L2.0 -1.7 L2.1 4.7 M0 -5 L0 5' transform='translate(56.4 -56.7) rotate(404.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.3 2.4 L-2.9 -3.4 L3.5 -4.7 L0.6 -0.3 M0 -5 L0 5' transform='translate(67.0 -43.7) rotate(416.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M0.8 1.0 L-0.2 4.4 L-2.4 0.5 M0 -5 L0 5' transform='translate(74.6 -28.8) rotate(428.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-3.4 4.7 L1.0 0.3 L3.0 -0.7 M0 -5 L0 5' transform='translate(79.0 -12.7) rotate(440.9)' stroke-opacity='.45' stroke-width='1'/%3E%3C/svg%3E") center/60% auto no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 93' preserveAspectRatio='none'%3E%3Cpolygon points='30,13 70,13 89,46.5 70,80 30,80 11,46.5' fill='none' stroke='%23e2ba7a' stroke-opacity='.16' stroke-width='5' vector-effect='non-scaling-stroke'/%3E%3Cpolygon points='30,13 70,13 89,46.5 70,80 30,80 11,46.5' fill='none' stroke='%23e2ba7a' stroke-opacity='.75' stroke-width='1.6' vector-effect='non-scaling-stroke'/%3E%3Cpolygon points='30,13 70,80 11,46.5 89,46.5 30,80 70,13' fill='none' stroke='%23e2ba7a' stroke-opacity='.12' stroke-width='1' stroke-dasharray='2 5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center/100% 100% no-repeat;
+    }
+    #view-ficha .attr-box{ position:absolute; width:22%; max-width:none; margin:0; transform:translate(-50%,-50%); border-radius:50%; aspect-ratio:1; }
+    #view-ficha .attr-box:nth-child(1){ left:30%; top:14%; }
+    #view-ficha .attr-box:nth-child(2){ left:70%; top:14%; }
+    #view-ficha .attr-box:nth-child(3){ left:89%; top:50%; }
+    #view-ficha .attr-box:nth-child(4){ left:70%; top:86%; }
+    #view-ficha .attr-box:nth-child(5){ left:30%; top:86%; }
+    #view-ficha .attr-box:nth-child(6){ left:11%; top:50%; }
+    #view-ficha .attr-raise{ position:absolute; left:50%; bottom:-15px; margin:0; transform:translateX(-50%); white-space:nowrap; }
+    #view-ficha .attr-raise:hover{ transform:translateX(-50%) translateY(-1px); }
+    #view-ficha .attr-raise:disabled{ transform:translateX(-50%); }
+  }
+  #view-ficha .attr-distribution{ border-radius:4px; text-align:center; background:rgba(0,0,0,.22); border-color:rgba(226,186,122,.22); }
+  #view-ficha .distribution-values{ justify-content:center; }
+
+  /* recursos: placas com moldura dupla */
+  #resourceFields{ gap:26px 20px; padding-top:8px; }
+  #resourceFields .field{ position:relative; padding:24px 14px 14px; border:1px solid rgba(226,186,122,.5); border-radius:3px; background:rgba(0,0,0,.28); outline:1px solid rgba(226,186,122,.2); outline-offset:5px; }
+  #resourceFields .field label{ position:absolute; top:-12px; left:14px; margin:0; padding:3px 12px; background:#0b080a; border:1px solid rgba(226,186,122,.5); color:var(--parchment); font-weight:700; font-size:13px; letter-spacing:.2em; white-space:nowrap; }
+  #resourceFields .field label::after{ font-family:'EB Garamond', Georgia, serif; font-weight:400; text-transform:none; letter-spacing:.04em; font-size:11px; color:var(--text-dim); margin-left:8px; }
+  #resourceFields label[for="f-pv"]::after{ content:'pontos de vida'; }
+  #resourceFields label[for="f-san"]::after{ content:'sanidade'; }
+  #resourceFields label[for="f-pe"]::after{ content:'pontos de esforço'; }
+  #resourceFields input{ background:transparent; border:0; border-bottom:1px solid rgba(226,186,122,.3); border-radius:0; text-align:center; font-family:'Cinzel', Georgia, serif; font-size:32px; color:var(--gold-bright); padding:4px 8px; }
+  #resourceFields input:focus{ box-shadow:none; border-bottom-color:var(--gold-bright); }
+  #resourceFields label[for="f-descorrupcao"]{ background:#2a0d12; border-color:rgba(193,73,88,.6); }
+
+  /* trilhas com faixa (fita) */
+  #view-ficha .track{ border-radius:3px; padding:20px 20px 20px; margin-bottom:22px; }
+  #view-ficha .track-head{ margin:-34px 0 14px -30px; align-items:center; }
+  #view-ficha .track-head h4{ padding:6px 30px 6px 18px; color:var(--parchment); font-size:13px; letter-spacing:.22em; clip-path:polygon(0 0,100% 0,calc(100% - 12px) 50%,100% 100%,0 100%); background:#6b4f27; box-shadow:0 3px 8px rgba(0,0,0,.4); }
+  #view-ficha .track.corrupcao .track-head h4{ background:var(--blood); }
+  #view-ficha .track-value{ margin-left:auto; padding-right:2px; }
+  #view-ficha .dot{ width:22px; height:22px; background:radial-gradient(circle at 35% 30%, #2a2025, #0f0b0d); border-color:rgba(226,186,122,.35); box-shadow:inset 0 2px 4px rgba(0,0,0,.6); }
+  #view-ficha .track.vontade .dot.filled{ background:radial-gradient(circle at 35% 30%, #f0cd92, #a97a38 70%); box-shadow:0 0 8px rgba(226,186,122,.45); }
+  #view-ficha .track.corrupcao .dot.filled{ background:radial-gradient(circle at 35% 30%, #e0707c, #7e1722 70%); box-shadow:0 0 8px rgba(193,73,88,.5); }
+
+  /* perícias: caderno com linhas */
+  #view-ficha .skills-grid{ gap:0 34px; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); }
+  #view-ficha .skill-field{ background:transparent; border:0; border-bottom:1px solid rgba(226,186,122,.2); border-radius:0; box-shadow:none; padding:7px 2px; }
+  #view-ficha .skill-field input[type=number]{ width:48px; height:34px; border-radius:17px; border:1.5px solid rgba(226,186,122,.5); background:rgba(0,0,0,.3); font-family:'Cinzel', Georgia, serif; font-weight:600; }
+  #view-ficha .skill-field input[type=number]:focus{ border-color:var(--gold-bright); }
+
+  @media (max-width:640px){
+    #view-ficha .sheet-card{ padding:36px 16px 28px; box-shadow:var(--shadow), inset 0 0 0 5px #120d10, inset 0 0 0 6px rgba(226,186,122,.3); }
+    #view-ficha .sheet-card::after{ inset:8px; background-size:38px 38px; }
+    #view-ficha h3.sub-heading{ letter-spacing:.14em; gap:10px; }
+    #view-ficha .attr-box select{ font-size:26px; }
+    #view-ficha .track-head{ margin-left:-20px; }
+    #idFields{ grid-template-columns:1fr; }
+    #resourceFields .field label{ left:8px; padding:3px 8px; letter-spacing:.1em; font-size:11px; max-width:calc(100% - 16px); overflow:hidden; text-overflow:ellipsis; }
+    #resourceFields label[for="f-pe"]::after, #resourceFields label[for="f-pv"]::after{ display:none; }
+  }
+@media print{
+  .ps-page{ position:relative; min-height:276.4mm; padding:8mm 8mm 6mm; background:#f9f3e3; border:1.6px solid #3a2a1c; box-shadow:inset 0 0 0 2.2mm #f9f3e3, inset 0 0 0 2.6mm #6b4f27; }
+  .ps-page::after{ content:''; position:absolute; inset:2mm; pointer-events:none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%236b4f27' stroke-linecap='round'%3E%3Cg transform='translate(0 0) scale(1 1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%236b4f27' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") top left/13mm 13mm no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%236b4f27' stroke-linecap='round'%3E%3Cg transform='translate(56 0) scale(-1 1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%236b4f27' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") top right/13mm 13mm no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%236b4f27' stroke-linecap='round'%3E%3Cg transform='translate(0 56) scale(1 -1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%236b4f27' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") bottom left/13mm 13mm no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 56 56' fill='none' stroke='%236b4f27' stroke-linecap='round'%3E%3Cg transform='translate(56 56) scale(-1 -1)' stroke-opacity='.8'%3E%3Cpath d='M3 52V16Q3 3 16 3H52' stroke-width='2'/%3E%3Cpath d='M9 52V20Q9 9 20 9H52' stroke-width='.9' stroke-opacity='.55'/%3E%3Cpath d='M16 16Q24 16 24 24Q24 31 17 30' stroke-width='1.2'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%236b4f27' stroke='none'/%3E%3Cpath d='M3 36H8M36 3V8' stroke-width='1.4'/%3E%3C/g%3E%3C/svg%3E") bottom right/13mm 13mm no-repeat; }
+  .ps-page > *{ position:relative; z-index:1; }
+  /* cabeçalho */
+  .ps-head{ flex-direction:column; align-items:center; border:0; padding:0; margin-bottom:5mm; gap:1mm; }
+  .ps-brand{ font-size:30pt; letter-spacing:.3em; padding-left:.3em; line-height:1; }
+  .ps-sub{ display:flex; align-items:center; gap:3mm; width:100%; justify-content:center; letter-spacing:.3em; }
+  .ps-sub::before, .ps-sub::after{ content:''; flex:1; height:3mm; }
+  .ps-sub::before{ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0L10 5L5 10L0 5Z' fill='%236b4f27' fill-opacity='.9'/%3E%3C/svg%3E") right center/2.6mm 2.6mm no-repeat, linear-gradient(90deg, transparent, #6b4f27) center/calc(100% - 4mm) .3mm no-repeat; }
+  .ps-sub::after{ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0L10 5L5 10L0 5Z' fill='%236b4f27' fill-opacity='.9'/%3E%3C/svg%3E") left center/2.6mm 2.6mm no-repeat, linear-gradient(270deg, transparent, #6b4f27) center/calc(100% - 4mm) .3mm no-repeat; }
+  /* identificação em cápsulas */
+  .ps-name{ border:0; padding:0; margin-bottom:3mm; display:flex; flex-direction:column; }
+  .ps-name strong{ order:1; border:1.4px solid #3a2a1c; border-radius:99px; box-shadow:inset 0 0 0 1.2mm #f9f3e3, inset 0 0 0 1.5mm #b9a67e; text-align:center; font-family:'Cinzel', Georgia, serif; font-size:16pt; min-height:11mm; line-height:11mm; padding:0 6mm; }
+  .ps-name span, .ps-meta span{ order:2; text-align:center; margin-top:1mm; }
+  .ps-name span::before, .ps-meta span::before{ content:'[ '; color:#8a6428; }
+  .ps-name span::after, .ps-meta span::after{ content:' ]'; color:#8a6428; }
+  .ps-meta{ gap:4mm; margin-bottom:2mm; }
+  .ps-meta div{ border:0; background:none; padding:0; display:flex; flex-direction:column; }
+  .ps-meta strong{ order:1; border:1.2px solid #3a2a1c; border-radius:99px; box-shadow:inset 0 0 0 1mm #f9f3e3, inset 0 0 0 1.25mm #b9a67e; text-align:center; font-size:11pt; min-height:8mm; line-height:8mm; padding:0 3mm; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  /* títulos ornamentados */
+  .ps-h{ display:flex; align-items:center; gap:3mm; justify-content:center; border:0; padding:0; margin:5mm 0 3mm; color:#6b4f27; font-size:12pt; letter-spacing:.26em; text-shadow:none; }
+  .ps-h::before, .ps-h::after{ content:''; flex:1; height:3mm; }
+  .ps-h::before{ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0L10 5L5 10L0 5Z' fill='%236b4f27' fill-opacity='.9'/%3E%3C/svg%3E") right center/2.6mm 2.6mm no-repeat, linear-gradient(90deg, transparent, #6b4f27) center/calc(100% - 4mm) .3mm no-repeat; }
+  .ps-h::after{ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0L10 5L5 10L0 5Z' fill='%236b4f27' fill-opacity='.9'/%3E%3C/svg%3E") left center/2.6mm 2.6mm no-repeat, linear-gradient(270deg, transparent, #6b4f27) center/calc(100% - 4mm) .3mm no-repeat; }
+  .ps-h.first{ margin-top:0; }
+  /* hexágono + recursos */
+  .ps-hexrow{ display:grid; grid-template-columns:90mm 1fr; gap:7mm; align-items:center; margin-bottom:3mm; }
+  .ps-hex{ position:relative; width:90mm; height:83.7mm; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 70' fill='none' stroke='%236b4f27' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 35 Q60 -8 114 35 Q60 78 6 35Z' stroke-width='2.2' stroke-opacity='.9'/%3E%3Cpath d='M16 35 Q60 3 104 35 Q60 67 16 35Z' stroke-width='1' stroke-opacity='.45'/%3E%3Ccircle cx='60' cy='35' r='15' stroke-width='2' stroke-opacity='.9'/%3E%3Ccircle cx='60' cy='35' r='9' stroke-width='1' stroke-opacity='.6'/%3E%3Cpath d='M60 26 L67 35 L60 44 L53 35Z' fill='%236b4f27' fill-opacity='.85' stroke='none'/%3E%3Cg stroke-width='1.2' stroke-opacity='.6'%3E%3Cpath d='M60 2V10M40 6L43 13M80 6L77 13M60 68V60M40 64L43 57M80 64L77 57'/%3E%3C/g%3E%3C/svg%3E") center/25% auto no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-100 -100 200 200' fill='none' stroke='%236b4f27' stroke-linecap='round'%3E%3Ccircle r='96' stroke-opacity='.35' stroke-width='.8'/%3E%3Ccircle r='70' stroke-opacity='.28' stroke-width='.8'/%3E%3Ccircle r='64' stroke-opacity='.18' stroke-width='.6' stroke-dasharray='1 4'/%3E%3Cline x1='96.00' y1='0.00' x2='90.00' y2='0.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='95.63' y1='8.37' x2='92.65' y2='8.11' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='94.54' y1='16.67' x2='91.59' y2='16.15' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='92.73' y1='24.85' x2='89.83' y2='24.07' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='90.21' y1='32.83' x2='87.39' y2='31.81' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='87.01' y1='40.57' x2='84.29' y2='39.30' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='83.14' y1='48.00' x2='77.94' y2='45.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='78.64' y1='55.06' x2='76.18' y2='53.34' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='73.54' y1='61.71' x2='71.24' y2='59.78' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='67.88' y1='67.88' x2='65.76' y2='65.76' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='61.71' y1='73.54' x2='59.78' y2='71.24' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='55.06' y1='78.64' x2='53.34' y2='76.18' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='48.00' y1='83.14' x2='45.00' y2='77.94' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='40.57' y1='87.01' x2='39.30' y2='84.29' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='32.83' y1='90.21' x2='31.81' y2='87.39' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='24.85' y1='92.73' x2='24.07' y2='89.83' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='16.67' y1='94.54' x2='16.15' y2='91.59' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='8.37' y1='95.63' x2='8.11' y2='92.65' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='0.00' y1='96.00' x2='0.00' y2='90.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-8.37' y1='95.63' x2='-8.11' y2='92.65' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-16.67' y1='94.54' x2='-16.15' y2='91.59' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-24.85' y1='92.73' x2='-24.07' y2='89.83' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-32.83' y1='90.21' x2='-31.81' y2='87.39' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-40.57' y1='87.01' x2='-39.30' y2='84.29' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-48.00' y1='83.14' x2='-45.00' y2='77.94' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-55.06' y1='78.64' x2='-53.34' y2='76.18' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-61.71' y1='73.54' x2='-59.78' y2='71.24' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-67.88' y1='67.88' x2='-65.76' y2='65.76' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-73.54' y1='61.71' x2='-71.24' y2='59.78' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-78.64' y1='55.06' x2='-76.18' y2='53.34' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-83.14' y1='48.00' x2='-77.94' y2='45.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-87.01' y1='40.57' x2='-84.29' y2='39.30' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-90.21' y1='32.83' x2='-87.39' y2='31.81' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-92.73' y1='24.85' x2='-89.83' y2='24.07' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-94.54' y1='16.67' x2='-91.59' y2='16.15' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-95.63' y1='8.37' x2='-92.65' y2='8.11' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-96.00' y1='0.00' x2='-90.00' y2='0.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-95.63' y1='-8.37' x2='-92.65' y2='-8.11' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-94.54' y1='-16.67' x2='-91.59' y2='-16.15' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-92.73' y1='-24.85' x2='-89.83' y2='-24.07' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-90.21' y1='-32.83' x2='-87.39' y2='-31.81' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-87.01' y1='-40.57' x2='-84.29' y2='-39.30' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-83.14' y1='-48.00' x2='-77.94' y2='-45.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-78.64' y1='-55.06' x2='-76.18' y2='-53.34' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-73.54' y1='-61.71' x2='-71.24' y2='-59.78' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-67.88' y1='-67.88' x2='-65.76' y2='-65.76' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-61.71' y1='-73.54' x2='-59.78' y2='-71.24' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-55.06' y1='-78.64' x2='-53.34' y2='-76.18' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-48.00' y1='-83.14' x2='-45.00' y2='-77.94' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-40.57' y1='-87.01' x2='-39.30' y2='-84.29' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-32.83' y1='-90.21' x2='-31.81' y2='-87.39' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-24.85' y1='-92.73' x2='-24.07' y2='-89.83' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-16.67' y1='-94.54' x2='-16.15' y2='-91.59' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-8.37' y1='-95.63' x2='-8.11' y2='-92.65' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-0.00' y1='-96.00' x2='-0.00' y2='-90.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='8.37' y1='-95.63' x2='8.11' y2='-92.65' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='16.67' y1='-94.54' x2='16.15' y2='-91.59' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='24.85' y1='-92.73' x2='24.07' y2='-89.83' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='32.83' y1='-90.21' x2='31.81' y2='-87.39' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='40.57' y1='-87.01' x2='39.30' y2='-84.29' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='48.00' y1='-83.14' x2='45.00' y2='-77.94' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='55.06' y1='-78.64' x2='53.34' y2='-76.18' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='61.71' y1='-73.54' x2='59.78' y2='-71.24' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='67.88' y1='-67.88' x2='65.76' y2='-65.76' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='73.54' y1='-61.71' x2='71.24' y2='-59.78' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='78.64' y1='-55.06' x2='76.18' y2='-53.34' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='83.14' y1='-48.00' x2='77.94' y2='-45.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='87.01' y1='-40.57' x2='84.29' y2='-39.30' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='90.21' y1='-32.83' x2='87.39' y2='-31.81' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='92.73' y1='-24.85' x2='89.83' y2='-24.07' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='94.54' y1='-16.67' x2='91.59' y2='-16.15' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='95.63' y1='-8.37' x2='92.65' y2='-8.11' stroke-opacity='.4' stroke-width='.8'/%3E%3Cpath d='M3.1 -1.1 L-3.2 3.2 L-2.8 0.8 L2.9 -2.9 M0 -5 L0 5' transform='translate(79.9 4.0) rotate(92.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.5 -4.3 L-2.9 -0.8 L2.3 -3.8 M0 -5 L0 5' transform='translate(77.3 20.5) rotate(104.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M0.9 0.8 L-3.1 0.9 L-3.2 -2.8 M0 -5 L0 5' transform='translate(71.4 36.2) rotate(116.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-1.5 -3.6 L-2.7 -1.9 L2.2 -3.2 M0 -5 L0 5' transform='translate(62.3 50.2) rotate(128.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.9 0.5 L-3.1 -4.4 L-2.1 1.8 M0 -5 L0 5' transform='translate(50.5 62.1) rotate(140.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M1.9 -0.3 L3.0 -1.4 L-1.8 -3.2 L2.0 -4.2 M0 -5 L0 5' transform='translate(36.5 71.2) rotate(152.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M0.2 3.8 L1.6 -2.1 L3.4 -3.8 L-0.6 2.6 M0 -5 L0 5' transform='translate(20.9 77.2) rotate(164.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M3.0 -0.8 L3.2 -4.2 L0.4 2.9 M0 -5 L0 5' transform='translate(4.4 79.9) rotate(176.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-1.1 -1.5 L-0.0 3.0 L-3.0 -4.1 L-1.6 2.0 M0 -5 L0 5' transform='translate(-12.3 79.0) rotate(188.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-3.1 2.0 L1.0 4.9 L2.3 -2.2 M0 -5 L0 5' transform='translate(-28.5 74.8) rotate(200.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M2.7 -1.5 L3.1 -1.4 L0.8 -0.1 L-2.0 -2.1 M0 -5 L0 5' transform='translate(-43.4 67.2) rotate(212.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.7 4.2 L-0.0 -3.3 L-0.7 -2.2 M0 -5 L0 5' transform='translate(-56.4 56.7) rotate(224.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M2.2 3.6 L-1.6 -0.8 L-1.0 3.8 M0 -5 L0 5' transform='translate(-67.0 43.7) rotate(236.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-2.4 -3.2 L-1.9 -2.7 L-0.1 0.9 M0 -5 L0 5' transform='translate(-74.6 28.8) rotate(248.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-1.5 -3.5 L0.2 1.1 L-1.3 -3.7 L2.5 4.5 M0 -5 L0 5' transform='translate(-79.0 12.7) rotate(260.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.3 3.7 L3.2 1.8 L0.4 -1.0 M0 -5 L0 5' transform='translate(-79.9 -4.0) rotate(272.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-2.8 1.3 L-3.1 -4.3 L-2.0 -3.4 L-1.1 -4.5 M0 -5 L0 5' transform='translate(-77.3 -20.5) rotate(284.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M0.5 0.4 L3.1 1.1 L-3.0 -2.9 M0 -5 L0 5' transform='translate(-71.4 -36.2) rotate(296.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-2.5 -2.5 L-1.1 -1.4 L-2.6 3.5 L3.5 -0.3 M0 -5 L0 5' transform='translate(-62.3 -50.2) rotate(308.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-1.3 -3.6 L1.7 2.4 L-0.1 1.9 L0.1 -2.9 M0 -5 L0 5' transform='translate(-50.5 -62.1) rotate(320.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-2.5 0.4 L-3.3 0.3 L3.3 3.6 L1.4 -2.4 M0 -5 L0 5' transform='translate(-36.5 -71.2) rotate(332.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M2.9 -1.4 L-1.9 0.4 L0.0 1.4 L0.8 2.9 M0 -5 L0 5' transform='translate(-20.9 -77.2) rotate(344.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M2.1 3.2 L1.7 -2.7 L0.1 -1.4 M0 -5 L0 5' transform='translate(-4.4 -79.9) rotate(356.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M3.4 2.9 L-0.2 -3.1 L0.7 -1.6 M0 -5 L0 5' transform='translate(12.3 -79.0) rotate(368.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M3.2 -1.4 L-2.0 -2.7 L-2.1 -3.0 L0.9 4.0 M0 -5 L0 5' transform='translate(28.5 -74.8) rotate(380.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.1 1.5 L2.1 -4.2 L1.1 4.1 M0 -5 L0 5' transform='translate(43.4 -67.2) rotate(392.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.2 -3.2 L2.0 -1.7 L2.1 4.7 M0 -5 L0 5' transform='translate(56.4 -56.7) rotate(404.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.3 2.4 L-2.9 -3.4 L3.5 -4.7 L0.6 -0.3 M0 -5 L0 5' transform='translate(67.0 -43.7) rotate(416.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M0.8 1.0 L-0.2 4.4 L-2.4 0.5 M0 -5 L0 5' transform='translate(74.6 -28.8) rotate(428.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-3.4 4.7 L1.0 0.3 L3.0 -0.7 M0 -5 L0 5' transform='translate(79.0 -12.7) rotate(440.9)' stroke-opacity='.45' stroke-width='1'/%3E%3C/svg%3E") center/60% auto no-repeat, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 93' preserveAspectRatio='none'%3E%3Cpolygon points='30,13 70,13 89,46.5 70,80 30,80 11,46.5' fill='none' stroke='%236b4f27' stroke-opacity='.10' stroke-width='5' vector-effect='non-scaling-stroke'/%3E%3Cpolygon points='30,13 70,13 89,46.5 70,80 30,80 11,46.5' fill='none' stroke='%236b4f27' stroke-opacity='.9' stroke-width='1.3' vector-effect='non-scaling-stroke'/%3E%3Cpolygon points='30,13 70,80 11,46.5 89,46.5 30,80 70,13' fill='none' stroke='%236b4f27' stroke-opacity='.12' stroke-width='1' stroke-dasharray='2 5' vector-effect='non-scaling-stroke'/%3E%3C/svg%3E") center/100% 100% no-repeat; }
+  .ps-hex .ps-attr{ position:absolute; width:20mm; height:20mm; transform:translate(-50%,-50%); border-radius:50%; border:1.4px solid #3a2a1c; background:#f9f3e3; outline:.5mm dotted #6b4f27; outline-offset:.9mm; padding:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .ps-hex .ps-attr span{ font-size:7pt; font-weight:700; letter-spacing:.16em; margin:0; color:#1c1416; }
+  .ps-hex .ps-attr strong{ font-size:17pt; line-height:1; }
+  .ps-hex .ps-attr em{ font-size:7pt; }
+  .ps-hex .ps-attr:nth-child(1){ left:30%; top:14%; } .ps-hex .ps-attr:nth-child(2){ left:70%; top:14%; }
+  .ps-hex .ps-attr:nth-child(3){ left:89%; top:50%; } .ps-hex .ps-attr:nth-child(4){ left:70%; top:86%; }
+  .ps-hex .ps-attr:nth-child(5){ left:30%; top:86%; } .ps-hex .ps-attr:nth-child(6){ left:11%; top:50%; }
+  .ps-resc{ display:flex; flex-direction:column; gap:6mm; }
+  .ps-resc .ps-res{ border:1.2px solid #3a2a1c; border-radius:2px; background:#fff9ea; padding:5mm 4mm 2mm; outline:.4mm solid #b9a67e; outline-offset:.9mm; position:relative; }
+  .ps-resc .ps-res > span{ position:absolute; top:-2.6mm; left:3mm; background:#1c1416; color:#f9f3e3; padding:.6mm 3mm; font-size:7.5pt; letter-spacing:.2em; font-weight:700; margin:0; }
+  .ps-resc .ps-res > span i{ font-style:normal; font-family:'EB Garamond', Georgia, serif; font-weight:400; text-transform:none; letter-spacing:.03em; font-size:7pt; margin-left:2mm; color:#d9ccaa; }
+  .ps-resc .ps-res.small > span{ background:#7a1c27; }
+  .ps-resc .ps-res strong{ text-align:center; font-family:'Cinzel', Georgia, serif; font-size:21pt; }
+  .ps-resc .ps-cur{ margin-top:0; }
+  /* trilhas com fita */
+  .ps-tracks{ gap:7mm; margin-top:4mm; }
+  .ps-tracks > div{ position:relative; border:1px solid #b9a67e; border-radius:2px; padding:5mm 4mm 3mm; background:#fff9ea; }
+  .ps-tracks > div > span{ position:absolute; top:-2.8mm; left:-1.8mm; background:#6b4f27; color:#f9f3e3; padding:.8mm 7mm .8mm 3mm; font-weight:700; letter-spacing:.2em; font-size:7.5pt; clip-path:polygon(0 0,100% 0,calc(100% - 2.5mm) 50%,100% 100%,0 100%); }
+  .ps-tracks > div:last-child > span{ background:#7a1c27; }
+  .ps-tracks small{ color:#f3e7c9; letter-spacing:.04em; margin-left:2mm; display:inline; }
+  .ps-dots{ gap:1.6mm; margin-top:1mm; }
+  .ps-dot{ width:4mm; height:4mm; border-color:#3a2a1c; background:#fff; }
+  .ps-dot.on{ background:#6b4f27; } .ps-dots.red .ps-dot.on{ background:#7a1c27; }
+  /* perícias compactas */
+  .ps-skills{ gap:0 7mm; }
+  .ps-skills li{ padding:.9mm 0; font-size:9.5pt; border-bottom:.3mm solid #cdbd98; }
+  .ps-skills li b{ min-width:8mm; height:4.6mm; line-height:4.2mm; border-radius:3mm; font-size:9pt; border-color:#8a6428; }
+  /* demais blocos */
+  .ps-box{ border-radius:2px; border-color:#3a2a1c; outline:.4mm solid #b9a67e; outline-offset:.9mm; margin:2mm 1mm 6mm; background:#fff9ea; }
+  .ps-ab{ border-radius:2px; background:#fff9ea; }
+  .ps-money div{ border-radius:2px; border-color:#3a2a1c; background:#fff9ea; }
+  .ps-box.big .ps-text{ min-height:330pt; }
+}
+@media print{
+  .ps-page{ padding:6.5mm 8mm 5mm; }
+  .ps-head{ margin-bottom:3mm; } .ps-brand{ font-size:26pt; }
+  .ps-name{ margin-bottom:2mm; } .ps-name strong{ min-height:9mm; line-height:9mm; font-size:15pt; }
+  .ps-meta strong{ min-height:7mm; line-height:7mm; }
+  .ps-h{ margin:3.5mm 0 2mm; }
+  .ps-hexrow{ grid-template-columns:80mm 1fr; gap:6mm; margin-bottom:1mm; }
+  .ps-hex{ width:80mm; height:74.4mm; }
+  .ps-hex .ps-attr{ width:17.6mm; height:17.6mm; }
+  .ps-hex .ps-attr strong{ font-size:15pt; }
+  .ps-resc{ gap:4.5mm; }
+  .ps-resc .ps-res{ padding:4.5mm 4mm 1.5mm; } .ps-resc .ps-res strong{ font-size:18pt; }
+  .ps-tracks{ margin-top:3mm; } .ps-tracks > div{ padding:4.5mm 4mm 2.2mm; }
+  .ps-skills li{ padding:.5mm 0; }
+  .ps-box.big .ps-text{ min-height:250pt; }
+  .ps-three .ps-text{ min-height:52pt; }
+  .ps-box{ margin:2mm 1mm 5mm; }
+}
+
+  /* ============ FUNDO: vinheta, brilho do ritual e anel de runas ============ */
+  html{ background:#0c090b; }
+  body{ background:transparent !important; }
+  body::before{
+    content:''; position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:1; mix-blend-mode:normal;
+    background:
+      radial-gradient(ellipse 70% 45% at 50% 0%, rgba(185,140,76,.13), transparent 70%),
+      radial-gradient(ellipse 50% 40% at 8% 85%, rgba(138,31,43,.14), transparent 70%),
+      radial-gradient(ellipse 45% 35% at 95% 55%, rgba(60,92,100,.10), transparent 70%),
+      radial-gradient(ellipse 120% 100% at 50% 50%, transparent 45%, rgba(0,0,0,.6) 100%),
+      linear-gradient(180deg, #110d10 0%, #0c090b 45%, #120d10 100%);
+  }
+  body::after{
+    content:''; position:fixed; left:50%; top:52%; z-index:-1; pointer-events:none;
+    width:min(1250px,150vw); aspect-ratio:1; transform:translate(-50%,-50%);
+    background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-100 -100 200 200' fill='none' stroke='%23e2ba7a' stroke-linecap='round'%3E%3Ccircle r='96' stroke-opacity='.35' stroke-width='.8'/%3E%3Ccircle r='70' stroke-opacity='.28' stroke-width='.8'/%3E%3Ccircle r='64' stroke-opacity='.18' stroke-width='.6' stroke-dasharray='1 4'/%3E%3Cline x1='96.00' y1='0.00' x2='90.00' y2='0.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='95.63' y1='8.37' x2='92.65' y2='8.11' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='94.54' y1='16.67' x2='91.59' y2='16.15' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='92.73' y1='24.85' x2='89.83' y2='24.07' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='90.21' y1='32.83' x2='87.39' y2='31.81' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='87.01' y1='40.57' x2='84.29' y2='39.30' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='83.14' y1='48.00' x2='77.94' y2='45.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='78.64' y1='55.06' x2='76.18' y2='53.34' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='73.54' y1='61.71' x2='71.24' y2='59.78' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='67.88' y1='67.88' x2='65.76' y2='65.76' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='61.71' y1='73.54' x2='59.78' y2='71.24' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='55.06' y1='78.64' x2='53.34' y2='76.18' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='48.00' y1='83.14' x2='45.00' y2='77.94' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='40.57' y1='87.01' x2='39.30' y2='84.29' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='32.83' y1='90.21' x2='31.81' y2='87.39' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='24.85' y1='92.73' x2='24.07' y2='89.83' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='16.67' y1='94.54' x2='16.15' y2='91.59' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='8.37' y1='95.63' x2='8.11' y2='92.65' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='0.00' y1='96.00' x2='0.00' y2='90.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-8.37' y1='95.63' x2='-8.11' y2='92.65' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-16.67' y1='94.54' x2='-16.15' y2='91.59' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-24.85' y1='92.73' x2='-24.07' y2='89.83' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-32.83' y1='90.21' x2='-31.81' y2='87.39' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-40.57' y1='87.01' x2='-39.30' y2='84.29' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-48.00' y1='83.14' x2='-45.00' y2='77.94' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-55.06' y1='78.64' x2='-53.34' y2='76.18' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-61.71' y1='73.54' x2='-59.78' y2='71.24' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-67.88' y1='67.88' x2='-65.76' y2='65.76' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-73.54' y1='61.71' x2='-71.24' y2='59.78' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-78.64' y1='55.06' x2='-76.18' y2='53.34' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-83.14' y1='48.00' x2='-77.94' y2='45.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-87.01' y1='40.57' x2='-84.29' y2='39.30' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-90.21' y1='32.83' x2='-87.39' y2='31.81' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-92.73' y1='24.85' x2='-89.83' y2='24.07' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-94.54' y1='16.67' x2='-91.59' y2='16.15' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-95.63' y1='8.37' x2='-92.65' y2='8.11' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-96.00' y1='0.00' x2='-90.00' y2='0.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-95.63' y1='-8.37' x2='-92.65' y2='-8.11' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-94.54' y1='-16.67' x2='-91.59' y2='-16.15' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-92.73' y1='-24.85' x2='-89.83' y2='-24.07' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-90.21' y1='-32.83' x2='-87.39' y2='-31.81' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-87.01' y1='-40.57' x2='-84.29' y2='-39.30' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-83.14' y1='-48.00' x2='-77.94' y2='-45.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-78.64' y1='-55.06' x2='-76.18' y2='-53.34' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-73.54' y1='-61.71' x2='-71.24' y2='-59.78' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-67.88' y1='-67.88' x2='-65.76' y2='-65.76' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-61.71' y1='-73.54' x2='-59.78' y2='-71.24' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-55.06' y1='-78.64' x2='-53.34' y2='-76.18' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-48.00' y1='-83.14' x2='-45.00' y2='-77.94' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-40.57' y1='-87.01' x2='-39.30' y2='-84.29' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-32.83' y1='-90.21' x2='-31.81' y2='-87.39' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-24.85' y1='-92.73' x2='-24.07' y2='-89.83' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-16.67' y1='-94.54' x2='-16.15' y2='-91.59' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-8.37' y1='-95.63' x2='-8.11' y2='-92.65' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='-0.00' y1='-96.00' x2='-0.00' y2='-90.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='8.37' y1='-95.63' x2='8.11' y2='-92.65' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='16.67' y1='-94.54' x2='16.15' y2='-91.59' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='24.85' y1='-92.73' x2='24.07' y2='-89.83' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='32.83' y1='-90.21' x2='31.81' y2='-87.39' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='40.57' y1='-87.01' x2='39.30' y2='-84.29' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='48.00' y1='-83.14' x2='45.00' y2='-77.94' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='55.06' y1='-78.64' x2='53.34' y2='-76.18' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='61.71' y1='-73.54' x2='59.78' y2='-71.24' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='67.88' y1='-67.88' x2='65.76' y2='-65.76' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='73.54' y1='-61.71' x2='71.24' y2='-59.78' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='78.64' y1='-55.06' x2='76.18' y2='-53.34' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='83.14' y1='-48.00' x2='77.94' y2='-45.00' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='87.01' y1='-40.57' x2='84.29' y2='-39.30' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='90.21' y1='-32.83' x2='87.39' y2='-31.81' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='92.73' y1='-24.85' x2='89.83' y2='-24.07' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='94.54' y1='-16.67' x2='91.59' y2='-16.15' stroke-opacity='.4' stroke-width='.8'/%3E%3Cline x1='95.63' y1='-8.37' x2='92.65' y2='-8.11' stroke-opacity='.4' stroke-width='.8'/%3E%3Cpath d='M3.1 -1.1 L-3.2 3.2 L-2.8 0.8 L2.9 -2.9 M0 -5 L0 5' transform='translate(79.9 4.0) rotate(92.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.5 -4.3 L-2.9 -0.8 L2.3 -3.8 M0 -5 L0 5' transform='translate(77.3 20.5) rotate(104.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M0.9 0.8 L-3.1 0.9 L-3.2 -2.8 M0 -5 L0 5' transform='translate(71.4 36.2) rotate(116.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-1.5 -3.6 L-2.7 -1.9 L2.2 -3.2 M0 -5 L0 5' transform='translate(62.3 50.2) rotate(128.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.9 0.5 L-3.1 -4.4 L-2.1 1.8 M0 -5 L0 5' transform='translate(50.5 62.1) rotate(140.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M1.9 -0.3 L3.0 -1.4 L-1.8 -3.2 L2.0 -4.2 M0 -5 L0 5' transform='translate(36.5 71.2) rotate(152.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M0.2 3.8 L1.6 -2.1 L3.4 -3.8 L-0.6 2.6 M0 -5 L0 5' transform='translate(20.9 77.2) rotate(164.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M3.0 -0.8 L3.2 -4.2 L0.4 2.9 M0 -5 L0 5' transform='translate(4.4 79.9) rotate(176.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-1.1 -1.5 L-0.0 3.0 L-3.0 -4.1 L-1.6 2.0 M0 -5 L0 5' transform='translate(-12.3 79.0) rotate(188.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-3.1 2.0 L1.0 4.9 L2.3 -2.2 M0 -5 L0 5' transform='translate(-28.5 74.8) rotate(200.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M2.7 -1.5 L3.1 -1.4 L0.8 -0.1 L-2.0 -2.1 M0 -5 L0 5' transform='translate(-43.4 67.2) rotate(212.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.7 4.2 L-0.0 -3.3 L-0.7 -2.2 M0 -5 L0 5' transform='translate(-56.4 56.7) rotate(224.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M2.2 3.6 L-1.6 -0.8 L-1.0 3.8 M0 -5 L0 5' transform='translate(-67.0 43.7) rotate(236.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-2.4 -3.2 L-1.9 -2.7 L-0.1 0.9 M0 -5 L0 5' transform='translate(-74.6 28.8) rotate(248.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-1.5 -3.5 L0.2 1.1 L-1.3 -3.7 L2.5 4.5 M0 -5 L0 5' transform='translate(-79.0 12.7) rotate(260.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.3 3.7 L3.2 1.8 L0.4 -1.0 M0 -5 L0 5' transform='translate(-79.9 -4.0) rotate(272.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-2.8 1.3 L-3.1 -4.3 L-2.0 -3.4 L-1.1 -4.5 M0 -5 L0 5' transform='translate(-77.3 -20.5) rotate(284.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M0.5 0.4 L3.1 1.1 L-3.0 -2.9 M0 -5 L0 5' transform='translate(-71.4 -36.2) rotate(296.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-2.5 -2.5 L-1.1 -1.4 L-2.6 3.5 L3.5 -0.3 M0 -5 L0 5' transform='translate(-62.3 -50.2) rotate(308.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-1.3 -3.6 L1.7 2.4 L-0.1 1.9 L0.1 -2.9 M0 -5 L0 5' transform='translate(-50.5 -62.1) rotate(320.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-2.5 0.4 L-3.3 0.3 L3.3 3.6 L1.4 -2.4 M0 -5 L0 5' transform='translate(-36.5 -71.2) rotate(332.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M2.9 -1.4 L-1.9 0.4 L0.0 1.4 L0.8 2.9 M0 -5 L0 5' transform='translate(-20.9 -77.2) rotate(344.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M2.1 3.2 L1.7 -2.7 L0.1 -1.4 M0 -5 L0 5' transform='translate(-4.4 -79.9) rotate(356.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M3.4 2.9 L-0.2 -3.1 L0.7 -1.6 M0 -5 L0 5' transform='translate(12.3 -79.0) rotate(368.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M3.2 -1.4 L-2.0 -2.7 L-2.1 -3.0 L0.9 4.0 M0 -5 L0 5' transform='translate(28.5 -74.8) rotate(380.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.1 1.5 L2.1 -4.2 L1.1 4.1 M0 -5 L0 5' transform='translate(43.4 -67.2) rotate(392.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.2 -3.2 L2.0 -1.7 L2.1 4.7 M0 -5 L0 5' transform='translate(56.4 -56.7) rotate(404.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-0.3 2.4 L-2.9 -3.4 L3.5 -4.7 L0.6 -0.3 M0 -5 L0 5' transform='translate(67.0 -43.7) rotate(416.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M0.8 1.0 L-0.2 4.4 L-2.4 0.5 M0 -5 L0 5' transform='translate(74.6 -28.8) rotate(428.9)' stroke-opacity='.45' stroke-width='1'/%3E%3Cpath d='M-3.4 4.7 L1.0 0.3 L3.0 -0.7 M0 -5 L0 5' transform='translate(79.0 -12.7) rotate(440.9)' stroke-opacity='.45' stroke-width='1'/%3E%3C/svg%3E") center/contain no-repeat; background-blend-mode:normal;
+    -webkit-mask:radial-gradient(circle, #000 60%, transparent 76%); mask:radial-gradient(circle, #000 60%, transparent 76%);
+    opacity:.2;
+  }
+  @media (prefers-reduced-motion:no-preference){
+    body::after{ animation:ringturn 420s linear infinite; }
+    @keyframes ringturn{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
+  }
+  @media (max-width:640px){ body::after{ width:170vw; opacity:.14; } }
+  @media print{ body::before, body::after{ display:none !important; } }
 </style>
 
 
@@ -1730,7 +2211,6 @@
 <nav class="main-nav" id="mainNav">
   <button type="button" class="main-tab active" data-view="compendio">Compêndio</button>
   <button type="button" class="main-tab" data-view="ficha">Ficha</button>
-  <button type="button" class="main-tab wz-tab" data-action="wizard">✦ Criar personagem</button>
   <button type="button" class="main-tab" data-view="guia">Como usar</button>
 </nav>
 <div class="occult-rule" aria-hidden="true"><span></span><i></i><span></span></div>
@@ -1873,10 +2353,12 @@
     </div>
 
     <div class="sheet-card case-surface">
+      <div class="val-panel ok" id="valPanel" aria-live="polite"></div>
       <div class="sheet-tabs" role="tablist" aria-label="Seções da ficha">
         <button type="button" class="sheet-tab active" id="tabGeral" role="tab" aria-selected="true" aria-controls="paneGeral" data-pane="paneGeral">Em geral</button>
         <button type="button" class="sheet-tab" id="tabInv" role="tab" aria-selected="false" aria-controls="paneInv" data-pane="paneInv">Inventário</button>
         <button type="button" class="sheet-tab" id="tabHist" role="tab" aria-selected="false" aria-controls="paneHist" data-pane="paneHist">História</button>
+        <button type="button" class="sheet-tab" id="tabSessao" role="tab" aria-selected="false" aria-controls="paneSessao" data-pane="paneSessao">Sessão</button>
       </div>
 
       <div class="sheet-pane active" id="paneGeral" role="tabpanel" aria-labelledby="tabGeral">
@@ -1916,6 +2398,10 @@
         <div id="invRoot"></div>
       </div>
 
+      <div class="sheet-pane" id="paneSessao" role="tabpanel" aria-labelledby="tabSessao">
+        <div id="sessRoot"></div>
+      </div>
+
       <div class="sheet-pane" id="paneHist" role="tabpanel" aria-labelledby="tabHist">
         <div class="inv-block">
           <h3 class="sub-heading">Background</h3>
@@ -1945,6 +2431,7 @@
       <button class="primary" id="btnSaveBrowser" type="button">Salvar Ficha</button>
       <button id="btnSavedSheets" type="button">Minhas Fichas</button>
       <button id="btnDownload" type="button">Exportar Backup (.ruptura)</button>
+      <button id="btnPDF" type="button">Exportar PDF</button>
       <label class="file-btn">Importar Backup<input type="file" id="fileLoad" accept=".ruptura,.json,application/json,application/octet-stream" hidden></label>
       <button id="btnShowCode" type="button">Código de Emergência</button>
       <button id="btnReset" type="button">Nova Ficha</button>
@@ -1982,6 +2469,8 @@
 </div>
 
 <footer><span class="footer-copy">Ruptura — compêndio de investigação sobrenatural.</span></footer>
+
+<div id="printSheet" aria-hidden="true"></div>
 
 <div class="wz-overlay" id="wzOverlay" aria-hidden="true">
   <div class="wz-panel" id="wzPanel" role="dialog" aria-modal="true" aria-labelledby="wzStepTitle">
@@ -2915,6 +3404,9 @@ function renderTracks(){
   corrValue = Math.max(0, Math.min(12, corrValue));
   renderTrack(corrTrackEl, {key:'corrupcao', label:'Corrupção', value:corrValue, max:12});
   renderTrack(vontTrackEl, {key:'vontade', label:'Vontade', value:vontValue, max:vMax});
+  const sv = document.getElementById('sessVont'), sc = document.getElementById('sessCorr');
+  if(sv) renderTrack(sv, {key:'vontade', label:'Vontade', value:vontValue, max:vMax});
+  if(sc) renderTrack(sc, {key:'corrupcao', label:'Corrupção', value:corrValue, max:12});
 }
 
 function renderSkillsGrid(){
@@ -3106,6 +3598,7 @@ document.querySelectorAll('.sheet-tab').forEach(btn => btn.addEventListener('cli
   document.querySelectorAll('.sheet-tab').forEach(b => { const on = b === btn; b.classList.toggle('active', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
   document.querySelectorAll('.sheet-pane').forEach(p => p.classList.toggle('active', p.id === btn.dataset.pane));
   if(btn.dataset.pane === 'paneInv') updateInventory();
+  if(btn.dataset.pane === 'paneSessao' && typeof renderSession === 'function') renderSession();
 }));
 document.getElementById('invRoot').addEventListener('input', updateInventory);
 document.getElementById('invRoot').addEventListener('change', function(e){
@@ -3139,6 +3632,7 @@ function gatherSheet(){
     escolhas: {...choiceValues},
     inv: readInventory(),
     historia: readHistoria(),
+    atual: {...atualValues},
     pericias: {}
   };
   attrList.forEach(a => data.atributos[a] = val('attr-'+a));
@@ -3165,6 +3659,8 @@ function applySheet(data){
   renderTracks();
   applyInventory(data.inv);
   applyHistoria(data.historia);
+  atualValues = sanitizeAtual(data.atual);
+  if(typeof refreshDerived === 'function') refreshDerived();
 }
 
 function listToZeroMap(list){
@@ -3177,7 +3673,7 @@ function defaultSheet(){
   return { v:6, nome:'', jogador:'', classe:'', subclasse:'', origem:'',
     atributos:{CAR:1,MAN:1,FOR:1,INT:1,CON:1,DES:1},
     pv:0, san:0, pe:0, descorrupcao:0,
-    corrupcao:0, vontade:12, escolhas:{}, inv:{armas:[], itens:[], dinheiro:500}, historia:{background:'', intencao:'', refugio:'', temor:''},
+    corrupcao:0, vontade:12, escolhas:{}, inv:{armas:[], itens:[], dinheiro:500}, historia:{background:'', intencao:'', refugio:'', temor:''}, atual:{pv:null, pe:null, san:null},
     pericias:listToZeroMap(skillsList)
   };
 }
@@ -4014,6 +4510,404 @@ document.addEventListener('keydown', function(e){
 
 const btnWizardEl = document.getElementById('btnWizard');
 if(btnWizardEl) btnWizardEl.addEventListener('click', openWizard);
+
+/* ======================================================================
+   V16 — Visão da ficha, conferência de regras e modo sessão
+   ====================================================================== */
+let atualValues = {pv:null, pe:null, san:null};
+const RES_KEYS = ['pv','pe','san'];
+const RES_LABEL = {pv:'PV', pe:'PE', san:'SAN'};
+const intOr = (v, d) => { const n = parseInt(v, 10); return Number.isFinite(n) ? n : d; };
+const fieldVal = id => { const el = document.getElementById(id); return el ? el.value : ''; };
+
+function maxOfRes(k){ return Math.max(0, intOr(fieldVal('f-'+k), 0)); }
+function getAtual(k){
+  const m = maxOfRes(k), v = atualValues[k];
+  return (v === null || v === undefined) ? m : Math.max(0, Math.min(m, v));
+}
+function setAtual(k, v){
+  const m = maxOfRes(k), n = Math.max(0, Math.min(m, v));
+  atualValues[k] = (n >= m) ? null : n;
+}
+function sanitizeAtual(obj){
+  const out = {pv:null, pe:null, san:null};
+  if(obj && typeof obj === 'object') RES_KEYS.forEach(k => {
+    const n = parseInt(obj[k], 10);
+    out[k] = Number.isFinite(n) ? Math.max(0, n) : null;
+  });
+  return out;
+}
+
+// Leitura única da ficha, usada pela conferência, pelo modo sessão, pelo assistente e pelo PDF.
+function getSheetView(){
+  const c = classesData.find(x => x.id === fieldVal('f-classe')) || null;
+  const sub = c ? (c.subclasses.find(s => s.name === fieldVal('f-subclasse')) || null) : null;
+  const origem = originsData.find(o => o.n === fieldVal('f-origem')) || null;
+  const attrs = attrList.map(a => { const v = Math.max(1, intOr(fieldVal('attr-'+a), 1)); return {a, v, mod:attrMod(v)}; });
+  const modOf = {}; attrs.forEach(x => modOf[x.a] = x.mod);
+  const skills = skillsList.map(s => ({s, attr:skillAttributes[s], v:intOr(fieldVal('per-'+slug(s)), 0), mod:modOf[skillAttributes[s]] || 0}));
+  const inv = readInventory();
+  const filled = it => ((it.n||'').trim() || (it.d||'').trim());
+  return {
+    nome:fieldVal('f-nome'), jogador:fieldVal('f-jogador'), c, sub, origem, attrs, skills,
+    max:{pv:maxOfRes('pv'), pe:maxOfRes('pe'), san:maxOfRes('san')},
+    atual:{pv:getAtual('pv'), pe:getAtual('pe'), san:getAtual('san')},
+    desc:Math.max(0, intOr(fieldVal('f-descorrupcao'), 0)),
+    vont:vontValue, vontMax:vontadeMax(), corr:corrValue,
+    inv, cap:inventoryCapacity(), used:inv.itens.filter(filled).length, hist:readHistoria()
+  };
+}
+
+/* ---------------- ATUALIZAÇÃO AUTOMÁTICA ---------------- */
+let refreshTimer = null;
+function refreshDerived(){
+  clearTimeout(refreshTimer);
+  refreshTimer = setTimeout(function(){
+    try{
+      const sess = document.getElementById('paneSessao');
+      if(sess && sess.classList.contains('active')) renderSession();
+    } catch(err){ console.error(err); }
+  }, 40);
+}
+['input','change','click'].forEach(evt => document.getElementById('ficha').addEventListener(evt, function(e){
+  if(e.target && e.target.closest && e.target.closest('#paneSessao')) return;
+  refreshDerived();
+}));
+
+// Salva em silêncio só se a ficha já tem um slot (útil para PV/PE/SAN durante a sessão).
+let autoSaveTimer = null;
+function autoSaveSession(){
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(function(){
+    if(!currentSaveId) return;
+    const saves = readSavedSheets();
+    const slot = saves.find(s => s.id === currentSaveId);
+    if(!slot) return;
+    slot.data = gatherSheet();
+    slot.updatedAt = new Date().toISOString();
+    writeSavedSheets(saves);
+  }, 600);
+}
+
+/* ---------------- MODO SESSÃO ---------------- */
+function nl(text){ return escapeHTML(text).replace(/\n/g, '<br>'); }
+function renderSession(){
+  const root = document.getElementById('sessRoot');
+  if(!root) return;
+  const v = getSheetView();
+  const meta = [v.c && v.c.name, v.sub && v.sub.name, v.origem && v.origem.n].filter(Boolean).join(' · ');
+  const fmt = n => (n >= 0 ? '+' : '−') + Math.abs(n);
+
+  const res = RES_KEYS.map(k => {
+    const max = v.max[k], cur = v.atual[k], pct = max ? Math.round(cur / max * 100) : 0;
+    const low = max && cur <= Math.ceil(max * 0.25) ? ' low' : '';
+    const b = d => '<button type="button" data-res="' + k + '" data-d="' + d + '" aria-label="' + RES_LABEL[k] + (d>0?' mais ':' menos ') + Math.abs(d) + '">' + (d>0?'+':'−') + Math.abs(d) + '</button>';
+    return '<div class="sess-res res-' + k + low + '">' +
+      '<div class="sess-res-top"><span class="sess-res-label">' + RES_LABEL[k] + '</span><span class="sess-res-val"><strong>' + cur + '</strong><small> / ' + max + '</small></span></div>' +
+      '<div class="sess-bar" aria-hidden="true"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="sess-res-btns">' + b(-5) + b(-1) + b(1) + b(5) + '</div></div>';
+  }).join('');
+
+  const attrs = v.attrs.map(x => '<div class="sess-attr"><span>' + x.a + '</span><strong>' + x.v + '</strong><em>mod ' + fmt(x.mod) + '</em></div>').join('');
+
+  const trained = v.skills.filter(x => x.v > 0).sort((a, b) => b.v - a.v || a.s.localeCompare(b.s, 'pt'));
+  const others = v.skills.filter(x => x.v <= 0);
+  const pill = x => '<li class="sess-skill"><span class="sess-skill-n" title="' + escapeHTML(skillHints[x.s] || '') + '">' + escapeHTML(x.s) + '<small> ' + x.attr + ' ' + fmt(x.mod) + '</small></span><strong>' + (x.v > 0 ? '+' : '') + x.v + '</strong></li>';
+  const skillsHTML = (trained.length ? '<ul class="sess-skills">' + trained.map(pill).join('') + '</ul>' : '<p class="sess-empty">Nenhuma perícia com bônus ainda.</p>') +
+    '<details class="sess-more"><summary>Outras perícias (' + others.length + ')</summary><ul class="sess-skills">' + others.map(pill).join('') + '</ul></details>';
+
+  const abil = [];
+  if(v.sub) v.sub.abilities.forEach(a => abil.push('<details class="sess-ab"><summary><span class="sess-ab-n">' + escapeHTML(a.n) + '</span><span class="sess-ab-c">' + escapeHTML(a.c) + '</span></summary><p>' + escapeHTML(a.d) + '</p></details>'));
+  if(v.origem && v.origem.h) abil.push('<details class="sess-ab origin"><summary><span class="sess-ab-n">' + escapeHTML(v.origem.h) + '</span><span class="sess-ab-c">Origem · ' + escapeHTML(v.origem.n) + '</span></summary><p>' + escapeHTML(v.origem.d) + '</p></details>');
+
+  const weapons = v.inv.armas.filter(w => (w.n||'').trim()).map(w => {
+    const bits = [w.b && 'Bônus ' + w.b, w.d && 'Dano ' + w.d, w.a && 'Alcance ' + w.a].filter(Boolean).map(escapeHTML).join(' · ');
+    return '<li><strong>' + escapeHTML(w.n) + '</strong>' + (bits ? '<span>' + bits + '</span>' : '') + (w.c ? '<em>' + nl(w.c) + '</em>' : '') + '</li>';
+  });
+  const items = v.inv.itens.filter(it => (it.n||'').trim() || (it.d||'').trim()).map(it =>
+    '<li><strong>' + escapeHTML(it.n || '—') + '</strong>' + (it.d ? '<em>' + nl(it.d) + '</em>' : '') + '</li>');
+
+  const histBlocks = [['Intenção', v.hist.intencao], ['Refúgio', v.hist.refugio], ['Temor', v.hist.temor], ['Background', v.hist.background]]
+    .filter(p => (p[1] || '').trim())
+    .map(p => '<details class="sess-ab hist"><summary><span class="sess-ab-n">' + p[0] + '</span></summary><p class="pre">' + nl(p[1]) + '</p></details>');
+
+  root.innerHTML =
+    '<div class="sess-head"><div><h3 class="sess-name">' + escapeHTML(v.nome.trim() || 'Sem nome') + '</h3>' +
+      '<div class="sess-meta">' + escapeHTML(meta || 'Classe, subclasse e origem ainda não escolhidas') + (v.jogador.trim() ? ' · jogador: ' + escapeHTML(v.jogador.trim()) : '') + '</div></div>' +
+      '<button type="button" class="sess-rest" data-rest="1">Restaurar PV/PE/SAN</button></div>' +
+    '<div class="sess-resgrid">' + res + '</div>' +
+    '<div class="sess-tracks"><div class="track vontade" id="sessVont"></div><div class="track corrupcao" id="sessCorr"></div></div>' +
+    (v.desc ? '<div class="sess-chip-row"><span class="sess-chip">Descorrupção <strong>' + v.desc + '</strong></span></div>' : '') +
+    '<h4 class="sess-h">Atributos</h4><div class="sess-attrs">' + attrs + '</div>' +
+    '<h4 class="sess-h">Perícias</h4>' + skillsHTML +
+    '<h4 class="sess-h">Habilidades</h4>' + (abil.length ? '<div class="sess-abs">' + abil.join('') + '</div>' : '<p class="sess-empty">Escolha subclasse e origem para ver as habilidades.</p>') +
+    '<h4 class="sess-h">Inventário</h4>' +
+    '<div class="sess-chip-row"><span class="sess-chip">Dinheiro <strong>$ ' + v.inv.dinheiro + '</strong></span><span class="sess-chip' + (v.used > v.cap ? ' over' : '') + '">Carga <strong>' + v.used + ' / ' + v.cap + '</strong></span></div>' +
+    '<div class="sess-inv"><div><h5>Armas</h5>' + (weapons.length ? '<ul class="sess-list">' + weapons.join('') + '</ul>' : '<p class="sess-empty">Sem armas.</p>') + '</div>' +
+    '<div><h5>Equipamento</h5>' + (items.length ? '<ul class="sess-list">' + items.join('') + '</ul>' : '<p class="sess-empty">Sem equipamento.</p>') + '</div></div>' +
+    (histBlocks.length ? '<h4 class="sess-h">História</h4><div class="sess-abs">' + histBlocks.join('') + '</div>' : '');
+  renderTracks();
+}
+
+document.getElementById('sessRoot').addEventListener('click', function(e){
+  const stepBtn = e.target.closest('[data-res]');
+  if(stepBtn){
+    const k = stepBtn.dataset.res;
+    setAtual(k, getAtual(k) + parseInt(stepBtn.dataset.d, 10));
+    renderSession();
+    autoSaveSession();
+    return;
+  }
+  if(e.target.closest('[data-rest]')){
+    RES_KEYS.forEach(k => atualValues[k] = null);
+    renderSession();
+    autoSaveSession();
+    return;
+  }
+  if(e.target.closest('.dot')){
+    handleTrackClick(e);
+    autoSaveSession();
+  }
+});
+/* ======================================================================
+   V16 — Exportação em PDF (impressão com layout próprio para papel)
+   ====================================================================== */
+function buildPrintSheet(){
+  const host = document.getElementById('printSheet');
+  if(!host) return;
+  const v = getSheetView();
+  const e = escapeHTML;
+  const fmt = n => (n >= 0 ? '+' : '−') + Math.abs(n);
+  const dots = (n, max) => Array.from({length:max}, (_, i) => '<i class="ps-dot' + (i < n ? ' on' : '') + '"></i>').join('');
+  const meta = [['Classe', v.c ? v.c.name : ''], ['Subclasse', v.sub ? v.sub.name : ''], ['Origem', v.origem ? v.origem.n : ''], ['Jogador', v.jogador]];
+
+  const attrBoxes = v.attrs.map(x => '<div class="ps-attr"><span>' + x.a + '</span><strong>' + x.v + '</strong><em>mod ' + fmt(x.mod) + '</em></div>').join('');
+  const RES_SUB = {pv:'pontos de vida', san:'sanidade', pe:'pontos de esforço'};
+  const resBoxes = ['pv','san','pe'].map(k => '<div class="ps-res"><span>' + RES_LABEL[k] + '<i>' + RES_SUB[k] + '</i></span><strong>' + v.max[k] + '</strong><div class="ps-cur"><small>atual</small><b></b></div></div>').join('');
+
+  const per = Math.ceil(v.skills.length / 3);
+  const cols = [0, 1, 2].map(ci => '<ul>' + v.skills.slice(ci * per, (ci + 1) * per).map(x =>
+    '<li class="' + (x.v > 0 ? 'on' : '') + '"><span>' + e(x.s) + ' <small>' + x.attr + '</small></span><b>' + (x.v > 0 ? '+' + x.v : '') + '</b></li>').join('') + '</ul>').join('');
+
+  const abil = [];
+  if(v.sub) v.sub.abilities.forEach(a => abil.push('<div class="ps-ab"><h4>' + e(a.n) + ' <small>' + e(a.c) + '</small></h4><p>' + e(a.d) + '</p></div>'));
+  if(v.origem && v.origem.h) abil.push('<div class="ps-ab origin"><h4>' + e(v.origem.h) + ' <small>Origem · ' + e(v.origem.n) + '</small></h4><p>' + e(v.origem.d) + '</p></div>');
+
+  const wRows = v.inv.armas.map(w => '<tr><td>' + e(w.n) + '</td><td>' + e(w.b) + '</td><td>' + e(w.d) + '</td><td>' + e(w.a) + '</td><td>' + e(w.c) + '</td></tr>').join('');
+  const filled = v.inv.itens.filter(it => (it.n||'').trim() || (it.d||'').trim());
+  const iRows = Array.from({length:Math.max(v.cap, filled.length)}, (_, i) => {
+    const it = filled[i] || {n:'', d:''};
+    return '<tr><td>' + e(it.n) + '</td><td>' + e(it.d) + '</td></tr>';
+  }).join('');
+
+  const box = (t, txt, cls) => '<div class="ps-box ' + (cls || '') + '"><h4>' + t + '</h4><div class="ps-text">' + e(txt || '') + '</div></div>';
+
+  host.innerHTML =
+    '<section class="ps-page">' +
+      '<header class="ps-head"><div class="ps-brand">RUPTURA</div><div class="ps-sub">Ficha de Personagem</div></header>' +
+      '<div class="ps-name"><span>Personagem</span><strong>' + e(v.nome || ' ') + '</strong></div>' +
+      '<div class="ps-meta">' + meta.map(m => '<div><span>' + m[0] + '</span><strong>' + e(m[1] || '—') + '</strong></div>').join('') + '</div>' +
+      '<h3 class="ps-h">Atributos e Recursos</h3>' +
+      '<div class="ps-hexrow"><div class="ps-hex">' + attrBoxes + '</div><div class="ps-resc">' + resBoxes + '<div class="ps-res small"><span>Descorrupção</span><strong>' + v.desc + '</strong></div></div></div>' +
+      '<div class="ps-tracks"><div><span>Vontade <small>' + v.vont + '/' + v.vontMax + '</small></span><div class="ps-dots">' + dots(v.vont, v.vontMax) + '</div></div>' +
+      '<div><span>Corrupção <small>' + v.corr + '/12</small></span><div class="ps-dots red">' + dots(v.corr, 12) + '</div></div></div>' +
+      '<h3 class="ps-h">Perícias</h3><div class="ps-skills">' + cols + '</div>' +
+    '</section>' +
+    '<section class="ps-page">' +
+      '<h3 class="ps-h first">Habilidades</h3>' + (abil.join('') || '<p class="ps-empty">Sem habilidades escolhidas.</p>') +
+      '<h3 class="ps-h">Inventário</h3>' +
+      '<div class="ps-money"><div><span>Dinheiro</span><strong>$ ' + v.inv.dinheiro + '</strong></div><div><span>Carga</span><strong>' + v.used + ' / ' + v.cap + ' itens</strong></div></div>' +
+      '<table class="ps-table w"><thead><tr><th>Arma</th><th>Bônus</th><th>Dano</th><th>Alcance</th><th>Comentário</th></tr></thead><tbody>' + wRows + '</tbody></table>' +
+      '<table class="ps-table i"><thead><tr><th>Equipamento</th><th>Descrição</th></tr></thead><tbody>' + iRows + '</tbody></table>' +
+    '</section>' +
+    '<section class="ps-page">' +
+      '<h3 class="ps-h first">História</h3>' +
+      box('Background', v.hist.background, 'big') +
+      '<div class="ps-three">' + box('Intenção', v.hist.intencao) + box('Refúgio', v.hist.refugio) + box('Temor', v.hist.temor) + '</div>' +
+    '</section>';
+  host.dataset.title = v.nome.trim() ? 'Ruptura - ' + v.nome.trim() : 'Ruptura - Ficha';
+}
+
+let titleBeforePrint = null;
+function exportPDF(){
+  buildPrintSheet();
+  showSheetMsg('Na janela de impressão, escolha “Salvar como PDF”.');
+  setTimeout(function(){ window.print(); }, 80);
+}
+window.addEventListener('beforeprint', function(){
+  if(!document.getElementById('view-ficha').classList.contains('active')) return;
+  buildPrintSheet();
+  titleBeforePrint = document.title;
+  const t = document.getElementById('printSheet').dataset.title;
+  if(t) document.title = t;
+});
+window.addEventListener('afterprint', function(){
+  if(titleBeforePrint !== null){ document.title = titleBeforePrint; titleBeforePrint = null; }
+  const host = document.getElementById('printSheet');
+  if(host) host.innerHTML = '';
+});
+document.getElementById('btnPDF').addEventListener('click', exportPDF);
+
+refreshDerived();
+
+/* ---------------- VALIDAÇÃO AUTOMÁTICA DAS REGRAS ---------------- */
+// Só lê a ficha; nunca altera valores. A única ação que escreve é o botão "Recalcular",
+// que o jogador aciona de propósito.
+function validateSheet(){
+  const out = [];
+  const add = (lvl, title, detail, target, pane, fix) => out.push({lvl, title, detail:detail||'', target:target||'', pane:pane||'paneGeral', fix:fix||''});
+  const classId = fieldVal('f-classe'), subName = fieldVal('f-subclasse'), origName = fieldVal('f-origem');
+  const c = classesData.find(x => x.id === classId) || null;
+  const sub = c ? c.subclasses.find(s => s.name === subName) : null;
+  const origem = originsData.find(o => o.n === origName) || null;
+
+  // 1) Identificação e combinações permitidas
+  if(!fieldVal('f-nome').trim()) add('info', 'Personagem sem nome', 'Dê um nome ao personagem.', 'f-nome');
+  if(!c) add('warn', 'Classe não escolhida', 'Sem classe não há PV, PE, SAN nem bônus de perícia calculados.', 'f-classe');
+  else if(!sub) add('warn', 'Subclasse não escolhida', 'Escolha uma subclasse de ' + c.name + '.', 'f-subclasse');
+  if(!origem) add('warn', 'Origem não escolhida', 'A Origem concede perícias, habilidade e bônus de recursos.', 'f-origem');
+  if(origName && !origem) add('error', 'Origem desconhecida', '“' + origName + '” não existe na lista de Origens.', 'f-origem');
+  if(origem && c && origem.allowed && !origem.allowed.includes(c.id))
+    add('error', 'Origem incompatível com a classe', origem.n + ' não pode ser usada por ' + c.name + '.', 'f-origem');
+
+  // 2) Atributos
+  const raw = attrList.map(a => { const el = document.getElementById('attr-'+a); return {a, raw:el ? el.value : '', n:el ? parseInt(el.value,10) : NaN}; });
+  const bad = raw.filter(x => !(x.n >= 1 && x.n <= 7));
+  if(bad.length) add('error', 'Atributo fora do limite 1–7', bad.map(x => x.a).join(', ') + ' precisa estar entre 1 e 7.', 'attrGrid');
+  const vals = raw.map(x => (x.n >= 1 && x.n <= 7) ? x.n : 1);
+  const total = vals.reduce((s,v) => s+v, 0);
+  const over = raw.filter(x => x.n > INITIAL_ATTRIBUTE_MAX).map(x => x.a);
+  if(over.length){
+    add('info', 'Personagem evoluído', over.join(', ') + ' acima de ' + INITIAL_ATTRIBUTE_MAX + '. Valores 5–7 são de evolução, então o total de 15 pontos não é conferido.', 'attrGrid');
+  } else if(total < INITIAL_ATTRIBUTE_TOTAL){
+    add('warn', 'Pontos de atributo sobrando', 'Total ' + total + '/' + INITIAL_ATTRIBUTE_TOTAL + '. Ainda restam ' + (INITIAL_ATTRIBUTE_TOTAL-total) + ' ponto(s) para distribuir.', 'attrGrid');
+  } else if(total > INITIAL_ATTRIBUTE_TOTAL){
+    add('error', 'Pontos de atributo a mais', 'Total ' + total + '/' + INITIAL_ATTRIBUTE_TOTAL + '. Retire ' + (total-INITIAL_ATTRIBUTE_TOTAL) + ' ponto(s) (ou eleve por evolução, acima de 4).', 'attrGrid');
+  }
+
+  // 3) Escolhas obrigatórias
+  const defs = getChoiceDefinitions();
+  const pending = defs.filter(d => !d.options.includes(choiceValues[d.key]));
+  pending.forEach(d => add('warn', 'Escolha pendente', d.label, 'choiceSection'));
+  const keys = new Set(defs.map(d => d.key));
+  const stale = Object.keys(choiceValues).filter(k => !keys.has(k));
+  if(stale.length) add('info', 'Escolhas antigas sem efeito', stale.length + ' escolha(s) guardada(s) não pertencem mais à classe/subclasse atual e são ignoradas.', 'choiceSection');
+  const picked = {};
+  defs.forEach(d => { const v = choiceValues[d.key]; if(v && d.options.includes(v)) picked[v] = (picked[v]||0) + 1; });
+  const dup = Object.keys(picked).filter(k => picked[k] > 1);
+  if(dup.length) add('info', 'Mesma perícia em mais de uma escolha', dup.join(', ') + ' recebe bônus de duas escolhas e eles se somam. Confirme se é isso mesmo.', 'choiceSection');
+
+  // 4) Bônus conferidos com as regras
+  if(c){
+    const exp = computeSheet(classId, subName, origName, choiceValues);
+    const mism = [];
+    [['f-pv','PV',exp.pv], ['f-pe','PE',exp.pe], ['f-san','SAN',exp.san], ['f-descorrupcao','Descorrupção',exp.descorrupcao]].forEach(([id, lab, want]) => {
+      const have = intOr(fieldVal(id), 0);
+      if(have !== want) mism.push(lab + ' está ' + have + ', as regras dão ' + want);
+    });
+    if(mism.length) add('warn', 'Recursos diferentes do calculado', mism.join(' · ') + '.', 'f-pv', 'paneGeral', 'recalc');
+    if(!pending.length){
+      const skm = [];
+      skillsList.forEach(s => {
+        const have = intOr(fieldVal('per-'+slug(s)), 0), want = exp.pericias[s] || 0;
+        if(have !== want) skm.push(s + ' ' + fmtMod(have) + ' (regras ' + fmtMod(want) + ')');
+      });
+      if(skm.length) add('warn', 'Bônus de perícia incompatíveis', skm.slice(0,6).join(' · ') + (skm.length>6 ? ' · e mais ' + (skm.length-6) : '') + '. Se for evolução ou ajuste do mestre, pode ignorar.', 'periciasGrid', 'paneGeral', 'recalc');
+    }
+  }
+  const neg = skillsList.filter(s => intOr(fieldVal('per-'+slug(s)), 0) < 0);
+  if(neg.length) add('warn', 'Perícia com valor negativo', neg.join(', '), 'periciasGrid');
+
+  // 5) Recursos atuais e trilhas
+  RES_KEYS.forEach(k => {
+    const a = atualValues[k], m = maxOfRes(k);
+    if(a !== null && a !== undefined && a > m) add('info', RES_LABEL[k] + ' atual acima do máximo', 'Valor ' + a + ' será limitado a ' + m + '.', '', 'paneSessao');
+  });
+  if(corrValue >= 12) add('info', 'Corrupção no máximo', 'A trilha de Corrupção está completa (12/12).', 'corrTrack');
+
+  // 6) Inventário
+  const inv = readInventory(), cap = inventoryCapacity();
+  const filled = it => ((it.n||'').trim() || (it.d||'').trim());
+  const beyond = inv.itens.slice(cap).filter(filled).length;
+  const usedN = inv.itens.filter(filled).length;
+  if(beyond > 0) add('error', 'Itens além da capacidade', usedN + ' itens preenchidos para capacidade ' + cap + ' (6 + FOR). ' + beyond + ' ficam fora do limite; eleve FOR ou remova itens.', 'invRoot', 'paneInv');
+  const mEl = document.getElementById('inv-dinheiro');
+  if(mEl && mEl.value !== '' && !(parseInt(mEl.value,10) >= 0)) add('error', 'Dinheiro inválido', 'O valor precisa ser 0 ou mais.', 'inv-dinheiro', 'paneInv');
+
+  const rank = {error:0, warn:1, info:2};
+  return out.sort((a,b) => rank[a.lvl]-rank[b.lvl]);
+}
+
+let valOpen = false, valTimer = null;
+function renderValidation(){
+  const host = document.getElementById('valPanel');
+  if(!host) return;
+  let items = [];
+  try{ items = validateSheet(); } catch(err){ console.error(err); return; }
+  const n = {error:0, warn:0, info:0};
+  items.forEach(i => n[i.lvl]++);
+  const blocking = n.error + n.warn;
+  const parts = [];
+  if(n.error) parts.push(n.error + (n.error>1?' erros':' erro'));
+  if(n.warn) parts.push(n.warn + (n.warn>1?' pendências':' pendência'));
+  if(n.info) parts.push(n.info + (n.info>1?' avisos':' aviso'));
+  const state = n.error ? 'error' : (n.warn ? 'warn' : 'ok');
+  const summary = blocking ? parts.join(' · ') : (n.info ? 'Regras em ordem · ' + parts.join(' · ') : 'Ficha em conformidade com as regras');
+  const icon = state === 'ok' ? '✓' : (state === 'error' ? '✕' : '!');
+  const hasFix = items.some(i => i.fix === 'recalc');
+  host.className = 'val-panel ' + state;
+  host.innerHTML =
+    '<button type="button" class="val-head" id="valToggle" aria-expanded="' + (valOpen && items.length ? 'true':'false') + '"' + (items.length ? '' : ' disabled') + '>' +
+      '<span class="val-ico" aria-hidden="true">' + icon + '</span>' +
+      '<span class="val-sum"><b>Conferência das regras</b><span>' + escapeHTML(summary) + '</span></span>' +
+      (items.length ? '<span class="val-chev" aria-hidden="true">' + (valOpen ? '▴' : '▾') + '</span>' : '') +
+    '</button>' +
+    ((valOpen && items.length) ? '<ul class="val-list">' + items.map((i, idx) =>
+      '<li class="val-item ' + i.lvl + '"><div><b>' + escapeHTML(i.title) + '</b>' + (i.detail ? '<p>' + escapeHTML(i.detail) + '</p>' : '') + '</div>' +
+      '<span class="val-acts">' +
+        (i.fix === 'recalc' ? '<button type="button" data-val-fix="recalc">Recalcular</button>' : '') +
+        (i.target || i.pane !== 'paneGeral' ? '<button type="button" data-val-go="' + idx + '">Ir</button>' : '') +
+      '</span></li>').join('') + '</ul>' : '');
+  host._items = items;
+  host.dataset.errors = n.error; host.dataset.warns = n.warn; host.dataset.infos = n.info;
+}
+function scheduleValidation(){
+  clearTimeout(valTimer);
+  valTimer = setTimeout(function(){ try{ renderValidation(); }catch(err){ console.error(err); } }, 120);
+}
+document.getElementById('valPanel').addEventListener('click', function(e){
+  if(e.target.closest('#valToggle')){ valOpen = !valOpen; renderValidation(); return; }
+  const fix = e.target.closest('[data-val-fix]');
+  if(fix){
+    if(window.confirm('Recalcular PV, PE, SAN, Descorrupção e Perícias pelas regras? Ajustes manuais nesses campos serão substituídos.')){
+      autoCalcSheet(); scheduleValidation();
+    }
+    return;
+  }
+  const go = e.target.closest('[data-val-go]');
+  if(go){
+    const it = (this._items || [])[parseInt(go.dataset.valGo, 10)];
+    if(!it) return;
+    const tab = document.querySelector('.sheet-tab[data-pane="' + it.pane + '"]');
+    if(tab && !tab.classList.contains('active')) tab.click();
+    setTimeout(function(){
+      let el = it.target ? document.getElementById(it.target) : null;
+      if(el && el.classList.contains('hidden-section')) el = null;
+      if(el){
+        el.scrollIntoView({behavior:'smooth', block:'center'});
+        if(/^(INPUT|SELECT|TEXTAREA)$/.test(el.tagName)){ try{ el.focus({preventScroll:true}); }catch(_){} }
+        el.classList.add('val-flash'); setTimeout(() => el.classList.remove('val-flash'), 1600);
+      }
+    }, 60);
+  }
+});
+['input','change','click'].forEach(evt => document.getElementById('ficha').addEventListener(evt, function(e){
+  if(e.target && e.target.closest && e.target.closest('#valPanel')) return;
+  scheduleValidation();
+}));
+const _refreshDerivedBase = refreshDerived;
+refreshDerived = function(){ _refreshDerivedBase(); scheduleValidation(); };
+renderValidation();
 
 } catch(err){
   // evita tela em branco travada: mostra aviso amigável em vez de quebrar tudo
